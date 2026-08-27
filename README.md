@@ -1,7 +1,7 @@
 # qa-practice-apps
 
 Small, self-contained web pages built **with intentional bugs**, used as targets for
-manual / exploratory QA practice and for QA interview preparation.
+manual / exploratory QA practice.
 
 Each app is a single `index.html` file — no build step, no dependencies, no backend.
 Open it in a browser and test it.
