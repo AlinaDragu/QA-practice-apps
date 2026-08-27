@@ -145,14 +145,16 @@
       show("error", "Parola introdusă este greșită.");
       return;
     }
-    if (!password) {
-      show("error", "Adresa de email este obligatorie.");
+
+    // BUG 4: SQL-injection-style input bypasses authentication (before the
+    // password is even checked — payload in the email field is enough)
+    if (email.indexOf("'--") !== -1 || email.toLowerCase().indexOf(" or 1=1") !== -1) {
+      show("success", "Autentificare reușită. Te redirecționăm...");
       return;
     }
 
-    // BUG 4: SQL-injection-style input bypasses authentication
-    if (email.indexOf("'--") !== -1 || email.toLowerCase().indexOf(" or 1=1") !== -1) {
-      show("success", "Autentificare reușită. Te redirecționăm...");
+    if (!password) {
+      show("error", "Adresa de email este obligatorie.");
       return;
     }
 
