@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian Pay — Transfer bancar</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: #eef2f6;
+    color: #1c2733;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  .card {
+    background: #fff;
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(20, 40, 70, 0.12);
+    padding: 30px 30px 26px;
+    position: relative;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .brand .dot { width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(135deg, #0a5cff, #00b3a4); }
+  .brand span { font-weight: 700; font-size: 16px; }
+
+  h1 { font-size: 20px; margin-bottom: 18px; }
+
+  /* BUG 12: balance badge is absolutely positioned and overlaps the heading on narrow screens */
+  .balance {
+    position: absolute;
+    top: 66px;
+    right: 30px;
+    background: #e7f5ec;
+    color: #1b7a3d;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 8px;
+  }
+  @media (max-width: 430px) {
+    .balance { right: 12px; top: 60px; }
+  }
+
+  .field { margin-bottom: 15px; }
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #35485c; }
+  input, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #c6d2df;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    background: #fff;
+  }
+  input:focus, select:focus { border-color: #0a5cff; box-shadow: 0 0 0 3px rgba(10, 92, 255, .15); }
+  .two { display: flex; gap: 12px; }
+  .two .field { flex: 1; }
+
+  .preview {
+    background: #f3f6fa;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #45586c;
+    margin: 6px 0 18px;
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    background: #0a5cff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:hover { background: #0949cc; }
+
+  .msg { font-size: 13px; margin-top: 14px; padding: 10px 12px; border-radius: 8px; display: none; }
+  .msg.error { display: block; background: #fdecea; color: #b3261e; }
+  .msg.success { display: block; background: #e7f5ec; color: #1b7a3d; }
+
+  .log { margin-top: 22px; }
+  .log h2 { font-size: 13px; color: #6b7a8d; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .5px; }
+  .log ul { list-style: none; font-size: 13px; }
+  .log li { padding: 8px 0; border-bottom: 1px solid #edf1f5; color: #35485c; }
+  .log li:last-child { border-bottom: none; }
+  .log .empty { color: #a3b1c0; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand"><div class="dot"></div><span>Meridian Pay</span></div>
+    <h1>Transfer nou</h1>
+    <div class="balance" id="balanceBadge">Sold: 2.500,00 RON</div>
+
+    <form id="payForm" novalidate>
+      <div class="field">
+        <label for="ibanField">IBAN destinatar</label>
+        <!-- BUG 5: tabindex 1 -->
+        <input type="text" id="ibanField" name="iban" placeholder="RO49 AAAA 1B31 0075 9384 0000" tabindex="1">
+      </div>
+
+      <div class="field">
+        <!-- BUG 9: 'for' points to an id that does not exist -->
+        <label for="amountInput">Sumă</label>
+        <!-- BUG 5: tabindex 4 — Tab reaches this only after Currency and PIN -->
+        <input type="text" id="amountField" name="amount" inputmode="decimal" placeholder="0,00" tabindex="4">
+      </div>
+
+      <div class="two">
+        <div class="field">
+          <label for="currencyField">Monedă</label>
+          <!-- BUG 5: tabindex 2 -->
+          <select id="currencyField" name="currency" tabindex="2">
+            <option value="RON">RON</option>
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="pinField">PIN</label>
+          <!-- BUG 10: PIN uses type="text" and is never masked -->
+          <!-- BUG 5: tabindex 3 -->
+          <!-- BUG 7: no length or numeric-format validation on PIN -->
+          <input type="text" id="pinField" name="pin" maxlength="8" tabindex="3">
+        </div>
+      </div>
+
+      <div class="preview" id="preview">Introdu o sumă pentru a vedea echivalentul.</div>
+
+      <button type="submit" id="payBtn" tabindex="5">Confirmă plata</button>
+      <div class="msg" id="message"></div>
+    </form>
+
+    <div class="log">
+      <h2>Plăți efectuate</h2>
+      <ul id="logList"><li class="empty">Nicio plată încă.</li></ul>
+    </div>
+  </div>
+
+<script>
+  var BALANCE_RON = 2500.00;
+  // rate = how much 1 RON is worth in the target currency
+  var RATES = { RON: 1, EUR: 0.20, USD: 0.22 };
+
+  var form = document.getElementById("payForm");
+  var ibanEl = document.getElementById("ibanField");
+  var amountEl = document.getElementById("amountField");
+  var currencyEl = document.getElementById("currencyField");
+  var pinEl = document.getElementById("pinField");
+  var preview = document.getElementById("preview");
+  var msg = document.getElementById("message");
+  var payBtn = document.getElementById("payBtn");
+  var logList = document.getElementById("logList");
+
+  function parseAmount(raw) {
+    if (raw === null || raw === undefined) return NaN;
+    return parseFloat(String(raw).replace(",", ".").trim());
+  }
+
+  function updatePreview() {
+    var amount = parseAmount(amountEl.value);
+    var cur = currencyEl.value;
+    if (isNaN(amount)) {
+      preview.textContent = "Introdu o sumă pentru a vedea echivalentul.";
+      return;
+    }
+    if (cur === "RON") {
+      preview.textContent = "Se vor debita " + amount.toFixed(2) + " RON din contul tău.";
+      return;
+    }
+    // BUG 8: preview uses full 2-decimal rounding here...
+    var converted = amount * RATES[cur];
+    preview.textContent = "Beneficiarul va primi aproximativ " + converted.toFixed(2) + " " + cur +
+      " (se debitează " + amount.toFixed(2) + " RON).";
+  }
+
+  // BUG 11: preview recalculates on amount input, but NOT when the currency changes
+  amountEl.addEventListener("input", updatePreview);
+
+  function addLogEntry(text) {
+    var empty = logList.querySelector(".empty");
+    if (empty) empty.remove();
+    var li = document.createElement("li");
+    li.textContent = text;
+    logList.appendChild(li);
+  }
+
+  function show(type, text) {
+    msg.className = "msg " + type;
+    msg.textContent = text;
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    var iban = ibanEl.value.trim();
+    var amount = parseAmount(amountEl.value);
+    var cur = currencyEl.value;
+    var pin = pinEl.value;
+
+    // BUG 1: only checks that IBAN is non-empty — no format/length/checksum validation
+    if (!iban) {
+      show("error", "Introdu IBAN-ul destinatarului.");
+      return;
+    }
+
+    // BUG 2 & BUG 3: negative and zero amounts pass this check
+    if (isNaN(amount)) {
+      show("error", "Sumă invalidă.");
+      return;
+    }
+
+    // BUG 7: PIN accepted with no length or digit check (empty still blocked)
+    if (!pin) {
+      show("error", "Introdu PIN-ul.");
+      return;
+    }
+
+    // BUG 6: wrong error message when funds are insufficient
+    if (amount > BALANCE_RON) {
+      show("error", "IBAN invalid.");
+      return;
+    }
+
+    // BUG 4: button is never disabled — rapid clicks log multiple payments
+    var converted;
+    if (cur === "RON") {
+      converted = amount.toFixed(2) + " RON";
+    } else {
+      // BUG 8: confirmation truncates to 1 decimal instead of rounding to 2 like the preview
+      var raw = amount * RATES[cur];
+      var truncated = Math.trunc(raw * 10) / 10;
+      converted = truncated.toFixed(1) + " " + cur;
+    }
+
+    show("success", "Plată confirmată către " + iban + ".");
+    addLogEntry(new Date().toLocaleTimeString("ro-RO") + " — " + amount.toFixed(2) + " RON → " + converted + " (" + iban + ")");
+  });
+</script>
+</body>
+</html>
