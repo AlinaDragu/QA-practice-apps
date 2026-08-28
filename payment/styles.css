@@ -1,0 +1,90 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #eef2f6;
+  color: #1c2733;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+.card {
+  background: #fff;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(20, 40, 70, 0.12);
+  padding: 30px 30px 26px;
+  position: relative;
+}
+.brand { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.brand .dot { width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(135deg, #0a5cff, #00b3a4); }
+.brand span { font-weight: 700; font-size: 16px; }
+
+h1 { font-size: 20px; margin-bottom: 18px; }
+
+/* BUG 12: balance badge is absolutely positioned and overlaps the heading on narrow screens */
+.balance {
+  position: absolute;
+  top: 66px;
+  right: 30px;
+  background: #e7f5ec;
+  color: #1b7a3d;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+@media (max-width: 430px) {
+  .balance { right: 12px; top: 60px; }
+}
+
+.field { margin-bottom: 15px; }
+label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #35485c; }
+input, select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #c6d2df;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  background: #fff;
+}
+input:focus, select:focus { border-color: #0a5cff; box-shadow: 0 0 0 3px rgba(10, 92, 255, .15); }
+.two { display: flex; gap: 12px; }
+.two .field { flex: 1; }
+
+.preview {
+  background: #f3f6fa;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #45586c;
+  margin: 6px 0 18px;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: #0a5cff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+button:hover { background: #0949cc; }
+
+.msg { font-size: 13px; margin-top: 14px; padding: 10px 12px; border-radius: 8px; display: none; }
+.msg.error { display: block; background: #fdecea; color: #b3261e; }
+.msg.success { display: block; background: #e7f5ec; color: #1b7a3d; }
+
+.log { margin-top: 22px; }
+.log h2 { font-size: 13px; color: #6b7a8d; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .5px; }
+.log ul { list-style: none; font-size: 13px; }
+.log li { padding: 8px 0; border-bottom: 1px solid #edf1f5; color: #35485c; }
+.log li:last-child { border-bottom: none; }
+.log .empty { color: #a3b1c0; }
