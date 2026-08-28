@@ -3,8 +3,8 @@
 Small, self-contained web pages built **with intentional bugs**, used as targets for
 manual / exploratory QA practice.
 
-Each app is a single `index.html` file — no build step, no dependencies, no backend.
-Open it in a browser and test it.
+Each app is a folder with separate `index.html`, `styles.css` and `script.js` —
+no build step, no dependencies, no backend. Open `index.html` in a browser and test it.
 
 ## Apps
 
@@ -62,5 +62,5 @@ python3 -m http.server 8000
 
 ## Adding a new practice app
 
-Create `<name>/index.html` and `<name>/BUGS.md`, add a row to the table above.
-Keep it single-file and dependency-free.
+Create `<name>/index.html`, `<name>/styles.css`, `<name>/script.js` and
+`<name>/BUGS.md`, add a row to the table above. Keep it dependency-free.
