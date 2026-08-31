@@ -1,0 +1,89 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #eef2f6;
+  color: #1c2733;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+.card {
+  background: #fff;
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+  border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(20, 40, 70, 0.12);
+  padding: 30px 30px 26px;
+  position: relative;
+}
+.brand { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.brand .dot { width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(135deg, #0a5cff, #00b3a4); }
+.brand span { font-weight: 700; font-size: 16px; }
+
+h1 { font-size: 20px; margin-bottom: 4px; }
+.sub { font-size: 13px; color: #6b7a8d; margin-bottom: 20px; }
+
+.field { margin-bottom: 16px; }
+label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #35485c; }
+input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #c6d2df;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  background: #fff;
+}
+input[type="text"]:focus { border-color: #0a5cff; box-shadow: 0 0 0 3px rgba(10, 92, 255, .15); }
+input[type="range"] { width: 100%; margin-top: 10px; }
+
+.info { font-size: 12px; color: #6b7a8d; background: #f4f7fa; border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; }
+
+.check { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #35485c; margin-bottom: 14px; }
+.check input { margin-top: 2px; }
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: #0a5cff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+button:hover { background: #0949cc; }
+
+.msg { font-size: 13px; margin-top: 14px; padding: 10px 12px; border-radius: 8px; display: none; }
+.msg.error { display: block; background: #fdecea; color: #b3261e; }
+.msg.success { display: block; background: #e7f5ec; color: #1b7a3d; }
+
+.results {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+/* BUG 12: fixed height + hidden overflow — large values (or the inflated rata
+   from the rate bug) get clipped instead of wrapping or shrinking */
+.result-box {
+  background: #f4f7fa;
+  border-radius: 8px;
+  padding: 12px;
+  height: 60px;
+  overflow: hidden;
+}
+.result-box .k { font-size: 10px; color: #6b7a8d; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px; }
+.result-box .v { font-size: 18px; font-weight: 700; white-space: nowrap; }
+
+.dti { font-size: 13px; margin-top: 14px; font-weight: 600; }
+.dti.ok { color: #1b7a3d; }
+.dti.bad { color: #b3261e; }
+
+.log { margin-top: 22px; }
+.log h2 { font-size: 13px; color: #6b7a8d; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .5px; }
+.log ul { list-style: none; font-size: 13px; }
+.log li { padding: 8px 0; border-bottom: 1px solid #edf1f5; color: #35485c; }
+.log li:last-child { border-bottom: none; }
+.log .empty { color: #a3b1c0; }

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian Bank — Simulare credit</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="card">
+    <div class="brand"><div class="dot"></div><span>Meridian Bank</span></div>
+    <h1>Simulare credit de nevoi personale</h1>
+    <div class="sub">Estimează rata lunară. Sumă între 1.000 și 150.000 RON, pe 6–120 luni.</div>
+
+    <form id="simForm" novalidate>
+      <div class="field">
+        <!-- BUG 11: 'for' points to an id that does not exist (input id is amountField) -->
+        <label for="sumaField">Sumă credit (RON)</label>
+        <!-- BUG 11: type="text" — no numeric keyboard on mobile, no browser numeric hint -->
+        <input type="text" id="amountField" name="amount" value="20000">
+        <!-- BUG 2 (one half): this slider has NO <label> at all -->
+        <input type="range" id="amountRange" min="1000" max="150000" step="500" value="20000">
+      </div>
+
+      <div class="field">
+        <label for="monthsField">Perioadă (luni)</label>
+        <input type="text" id="monthsField" name="months" value="36">
+        <input type="range" id="monthsRange" min="6" max="120" step="6" value="36">
+      </div>
+
+      <div class="field">
+        <label for="incomeField">Venit lunar net (RON)</label>
+        <input type="text" id="incomeField" name="income" placeholder="ex. 4.500,00">
+      </div>
+
+      <div class="info">Dobândă nominală fixă: <strong>9,49% / an</strong> · comision analiză dosar: 1% (o singură dată)</div>
+
+      <label class="check">
+        <input type="checkbox" id="insurance">
+        <span>Adaugă asigurare de viață (opțional)</span>
+      </label>
+
+      <button type="submit" id="calcBtn">Calculează</button>
+      <div class="msg" id="message"></div>
+    </form>
+
+    <div class="results">
+      <div class="result-box"><div class="k">Rată lunară</div><div class="v" id="rataOut">—</div></div>
+      <div class="result-box"><div class="k">DAE</div><div class="v" id="daeOut">—</div></div>
+      <div class="result-box"><div class="k">Total de plată</div><div class="v" id="totalOut">—</div></div>
+      <div class="result-box"><div class="k">Total dobândă</div><div class="v" id="dobandaOut">—</div></div>
+      <div class="result-box"><div class="k">Asigurare / lună</div><div class="v" id="insOut">—</div></div>
+      <div class="result-box"><div class="k">Comision analiză</div><div class="v" id="comOut">—</div></div>
+    </div>
+    <div class="dti" id="dtiLine"></div>
+
+    <div class="log">
+      <h2>Simulări efectuate</h2>
+      <ul id="logList"><li class="empty">Nicio simulare încă.</li></ul>
+    </div>
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>

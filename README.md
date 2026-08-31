@@ -13,6 +13,7 @@ no build step, no dependencies, no backend. Open `index.html` in a browser and t
 | Login | [`login/index.html`](login/index.html) | Bank login page ("Meridian Bank") | 9 planted |
 | Payment / transfer | [`payment/index.html`](payment/index.html) | Bank transfer page ("Meridian Pay"), user already logged in, balance 2.500,00 RON | 10 planted + 2 bonus |
 | Registration | [`register/index.html`](register/index.html) | New-customer sign-up form ("Meridian Bank"), lots of field validation | 14 planted |
+| Loan simulator | [`loan/index.html`](loan/index.html) | Personal-loan calculator ("Meridian Bank"): amount/period sliders, rate & affordability math | 14 planted |
 
 "Meridian" is a made-up name — not real branding.
 
