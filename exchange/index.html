@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian Bank — Schimb valutar</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="card">
+    <div class="brand"><div class="dot"></div><span>Meridian Bank</span></div>
+    <h1>Schimb valutar</h1>
+    <div class="sub">Schimbă bani între conturile tale. Ai <strong>8.500,00 RON</strong>, <strong>320,00 EUR</strong> și <strong>150,00 USD</strong> disponibili. Sumă minimă 1,00.</div>
+
+    <div class="badges">
+      <div class="badge">RON<span id="balRON">—</span></div>
+      <div class="badge">EUR<span id="balEUR">—</span></div>
+      <div class="badge">USD<span id="balUSD">—</span></div>
+    </div>
+
+    <form id="fxForm" novalidate>
+      <div class="field">
+        <!-- BUG 13: 'for' points to an id that does not exist (input id is amountField) -->
+        <label for="suma">Sumă de schimbat</label>
+        <!-- BUG 8 / BUG 13: type="text" — parseFloat with no comma/dot handling,
+             and no numeric keyboard / numeric hint on mobile -->
+        <input type="text" id="amountField" name="amount" value="100">
+      </div>
+
+      <div class="field">
+        <div class="pair-row">
+          <!-- BUG 13: this <select> has no <label> at all -->
+          <select id="fromCur">
+            <option value="RON">RON — Lei</option>
+            <option value="EUR">EUR — Euro</option>
+            <option value="USD">USD — Dolari</option>
+          </select>
+          <button type="button" class="swap-btn" id="swapBtn" title="Inversează monedele">⇅</button>
+          <!-- BUG 13: this <select> has no <label> at all -->
+          <select id="toCur">
+            <option value="EUR">EUR — Euro</option>
+            <option value="RON">RON — Lei</option>
+            <option value="USD">USD — Dolari</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="rate-row">
+        <span id="rateLine">Curs: —</span>
+        <button type="button" id="refreshBtn">↻ Reîmprospătează cursul</button>
+      </div>
+
+      <div class="field">
+        <label for="refField">Referință (opțional)</label>
+        <input type="text" id="refField" name="ref" placeholder="ex. economii vacanță">
+      </div>
+
+      <div class="info">Comision schimb valutar: <strong>0,5%</strong> din suma schimbată.</div>
+
+      <button type="submit" id="fxBtn">Schimbă acum</button>
+      <div class="msg" id="message"></div>
+    </form>
+
+    <div class="results">
+      <div class="receive-box">
+        <div class="k">Vei primi</div>
+        <div class="v" id="receiveOut">—</div>
+      </div>
+      <div class="grid2">
+        <div class="result-box"><div class="k">Curs folosit</div><div class="v" id="rateUsedOut">—</div></div>
+        <div class="result-box"><div class="k">Comision</div><div class="v" id="feeOut">—</div></div>
+        <div class="result-box"><div class="k">Suma debitată</div><div class="v" id="debitOut">—</div></div>
+        <div class="result-box"><div class="k">Sold sursă după schimb</div><div class="v" id="soldOut">—</div></div>
+      </div>
+    </div>
+
+    <div class="log">
+      <h2>Schimburi efectuate</h2>
+      <ul id="logList"><li class="empty">Niciun schimb încă.</li></ul>
+    </div>
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>
