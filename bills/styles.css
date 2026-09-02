@@ -1,0 +1,153 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+
+body {
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #eef2f6;
+  color: #1c2733;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+.card {
+  background: #fff;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(20, 40, 70, 0.12);
+  padding: 30px 30px 26px;
+}
+.brand { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.brand .dot { width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(135deg, #0a5cff, #00b3a4); }
+.brand span { font-weight: 700; font-size: 16px; }
+
+h1 { font-size: 20px; margin-bottom: 4px; }
+.sub { font-size: 13px; color: #6b7a8d; margin-bottom: 18px; }
+h2 { font-size: 13px; color: #6b7a8d; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .5px; }
+
+.summary {
+  background: #f4f7fa;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 20px;
+}
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.summary-row strong { font-size: 18px; }
+.summary-sub { font-size: 12px; color: #6b7a8d; margin-top: 4px; }
+
+.bills { margin-bottom: 20px; }
+.bills ul { list-style: none; }
+/* BUG 16: nowrap row that never wraps at narrow widths */
+.bill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid #edf1f5;
+  flex-wrap: nowrap;
+}
+.bill:last-child { border-bottom: none; }
+.bill-main { flex: 1; cursor: pointer; }
+/* BUG 16: nowrap and no min-width:0 on the flex item — a long "furnizor · tip"
+   string pushes the row wider than the card instead of wrapping or shrinking,
+   so the amount + "Plătește" get shoved off the right edge at narrow widths. */
+.bill-prov { font-size: 14px; font-weight: 600; white-space: nowrap; }
+.bill-meta { font-size: 12px; color: #6b7a8d; margin-top: 3px; }
+.bill-right { text-align: right; white-space: nowrap; min-width: 92px; }
+.bill-sum { font-size: 14px; font-weight: 700; }
+/* BUG 15: styled like a link but it is a <span> — not keyboard reachable */
+.pay-link { display: inline-block; margin-top: 4px; font-size: 12px; font-weight: 600; color: #0a5cff; cursor: pointer; }
+
+.tag { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 5px; }
+.tag.ok { background: #eef2f6; color: #6b7a8d; }
+.tag.overdue { background: #fdecea; color: #b3261e; }
+
+.pay-panel {
+  border: 1px solid #dbe3ec;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+  background: #fbfdff;
+}
+.pp-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+.pp-close { cursor: pointer; font-size: 20px; line-height: 1; color: #6b7a8d; }
+
+.field { margin-bottom: 14px; }
+label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #35485c; }
+input[type="text"], input[type="date"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #c6d2df;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  background: #fff;
+}
+input[type="text"]:focus, input[type="date"]:focus {
+  border-color: #0a5cff;
+  box-shadow: 0 0 0 3px rgba(10, 92, 255, .15);
+}
+.hint { font-size: 12px; color: #6b7a8d; margin-top: 4px; }
+
+.pp-lines { font-size: 13px; color: #35485c; margin-bottom: 14px; }
+.pp-lines > div { display: flex; justify-content: space-between; padding: 3px 0; }
+.pp-total { border-top: 1px solid #dbe3ec; margin-top: 4px; padding-top: 6px; font-weight: 700; }
+
+.check { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: #35485c; margin-bottom: 12px; }
+.check input { width: auto; }
+
+.info { font-size: 12px; color: #6b7a8d; background: #f4f7fa; border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; }
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: #0a5cff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+button[type="submit"]:hover { background: #0949cc; }
+#runSchedBtn {
+  background: #eef2f6;
+  color: #35485c;
+  border: 1px solid #c6d2df;
+  font-size: 13px;
+  padding: 9px;
+  margin-top: 4px;
+}
+#runSchedBtn:hover { background: #e3e9f0; }
+
+.msg { font-size: 13px; margin-top: 12px; padding: 10px 12px; border-radius: 8px; display: none; }
+.msg.error { display: block; background: #fdecea; color: #b3261e; }
+.msg.success { display: block; background: #e7f5ec; color: #1b7a3d; }
+
+.scheduled, .history { margin-top: 4px; margin-bottom: 20px; }
+.scheduled ul, .history ul { list-style: none; font-size: 13px; margin-bottom: 8px; }
+/* BUG 16: long reference / card text is clipped instead of wrapping */
+.scheduled li, .history li {
+  padding: 8px 0;
+  border-bottom: 1px solid #edf1f5;
+  color: #35485c;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.scheduled li:last-child, .history li:last-child { border-bottom: none; }
+.empty { color: #a3b1c0; }

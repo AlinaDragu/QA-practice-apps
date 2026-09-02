@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian Bank — Plată facturi</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="card">
+    <div class="brand"><div class="dot"></div><span>Meridian Bank</span></div>
+    <h1>Plată facturi și utilități</h1>
+    <!-- BUG 14: full card number (PAN) printed in clear in the subtitle -->
+    <div class="sub">Cont curent <strong>4.200,00 RON</strong> · card <strong>4539 8842 1100 4821</strong></div>
+
+    <div class="summary">
+      <div class="summary-row">
+        <span>Total de plată (<span id="billCount">—</span> facturi)</span>
+        <strong id="totalDue">—</strong>
+      </div>
+      <div class="summary-sub"><span id="overdueCount">—</span> restante · fără penalități incluse</div>
+    </div>
+
+    <div class="bills">
+      <h2>Facturi de plată</h2>
+      <ul id="billList"></ul>
+    </div>
+
+    <div class="pay-panel" id="payPanel" hidden>
+      <div class="pp-head">
+        <span id="ppTitle">—</span>
+        <!-- BUG 15: close control is a <span>, not a <button> — no keyboard focus, no role -->
+        <span class="pp-close" id="ppClose" title="Închide">&times;</span>
+      </div>
+      <form id="payForm" novalidate>
+        <div class="field">
+          <!-- BUG 15: 'for' points to an id that does not exist (input id is amountInput) -->
+          <label for="sumaPlata">Sumă de plată</label>
+          <!-- BUG 6: type="text" + parseFloat with no comma/dot normalisation -->
+          <input type="text" id="amountInput" name="amount" autocomplete="off">
+          <div class="hint">Poți plăti parțial sau integral.</div>
+        </div>
+
+        <div class="pp-lines">
+          <div><span>Factură</span><span id="ppPrincipal">—</span></div>
+          <div id="ppPenaltyRow" hidden><span>Penalitate întârziere</span><span id="ppPenalty">—</span></div>
+          <div class="pp-total"><span>Total de plată</span><span id="ppTotal">—</span></div>
+        </div>
+
+        <div class="field">
+          <label for="refInput">Referință plată (opțional)</label>
+          <input type="text" id="refInput" name="ref" placeholder="ex. factură august" autocomplete="off">
+        </div>
+
+        <label class="check"><input type="checkbox" id="schedChk"> Programează plata</label>
+        <div class="field" id="schedDateWrap" hidden>
+          <label for="schedDate">Data plății</label>
+          <!-- BUG 8: no min attribute; past dates are accepted -->
+          <input type="date" id="schedDate">
+        </div>
+        <label class="check"><input type="checkbox" id="recChk"> Plată recurentă lunară</label>
+
+        <!-- BUG 14: card number again in clear -->
+        <div class="info">Se plătește cu cardul <strong id="ppCard">—</strong>.</div>
+
+        <!-- BUG 11: button is never disabled, no in-flight guard -->
+        <button type="submit" id="payBtn">Plătește acum</button>
+        <div class="msg" id="msg"></div>
+      </form>
+    </div>
+
+    <div class="scheduled">
+      <h2>Plăți programate</h2>
+      <ul id="schedList"><li class="empty">Nicio plată programată.</li></ul>
+      <!-- BUG 12: running this twice re-executes every due scheduled payment -->
+      <button type="button" id="runSchedBtn">Rulează plățile programate scadente</button>
+    </div>
+
+    <div class="history">
+      <h2>Plăți efectuate</h2>
+      <ul id="histList"><li class="empty">Nicio plată încă.</li></ul>
+    </div>
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>
