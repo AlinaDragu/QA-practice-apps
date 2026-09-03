@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian Bank — Depozite la termen</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="card">
+    <div class="brand"><div class="dot"></div><span>Meridian Bank</span></div>
+    <h1>Depozite la termen</h1>
+    <!-- BUG 14: full IBAN printed in clear in the subtitle -->
+    <div class="sub">Cont curent <strong id="balance">25.000,00 RON</strong> · IBAN <strong>RO49 MERI 1B31 0075 9384 0000</strong></div>
+    <div class="today">Azi: joi, 3 septembrie 2026</div>
+
+    <div class="rates">
+      <h2>Dobânzi curente</h2>
+      <!-- BUG 16: this 4-cell row is nowrap and does not scroll — it overflows the card at ~375px -->
+      <div class="rate-table">
+        <div class="rate-cell"><span>1 lună</span><strong>2,00%</strong></div>
+        <div class="rate-cell"><span>3 luni</span><strong>3,00%</strong></div>
+        <div class="rate-cell"><span>6 luni</span><strong>4,00%</strong></div>
+        <div class="rate-cell"><span>12 luni</span><strong>4,50%</strong></div>
+      </div>
+      <div class="rate-note">Dobânda anuală (p.a.). Impozit pe venitul din dobândă: 10%, reținut la sursă.</div>
+    </div>
+
+    <div class="new-dep">
+      <h2>Deschide un depozit nou</h2>
+      <form id="depForm" novalidate>
+        <div class="field">
+          <!-- BUG 15: 'for' points to an id that does not exist (input id is amountInput) -->
+          <label for="sumaDepozit">Sumă (RON)</label>
+          <!-- BUG 4: type="text" + parseFloat with no comma/dot normalisation -->
+          <input type="text" id="amountInput" name="amount" autocomplete="off" placeholder="ex. 10000">
+          <!-- BUG 5: this limit is advertised but never enforced anywhere -->
+          <div class="hint">Sumă minimă 1.000 RON · maximă 100.000 RON.</div>
+        </div>
+
+        <div class="field">
+          <span class="pseudo-label">Termen</span>
+          <!-- BUG 15: term selector is clickable <span> chips — not radio buttons,
+               not <button> — so it cannot be operated with the keyboard -->
+          <div class="chips" id="termChips">
+            <span class="chip" data-months="1">1 lună</span>
+            <span class="chip" data-months="3">3 luni</span>
+            <span class="chip active" data-months="6">6 luni</span>
+            <span class="chip" data-months="12">12 luni</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="nameInput">Denumire (opțional)</label>
+          <input type="text" id="nameInput" name="name" placeholder="ex. Economii vacanță" autocomplete="off">
+        </div>
+
+        <label class="check"><input type="checkbox" id="renewChk"> Reînnoire automată la scadență</label>
+
+        <div class="preview">
+          <div class="pv-row"><span>Sumă depusă</span><span id="pvPrincipal">—</span></div>
+          <div class="pv-row"><span>Dobândă <span id="pvRate">4,00%</span> pe an</span><span id="pvGross">—</span></div>
+          <div class="pv-row"><span>Impozit pe dobândă (10%)</span><span id="pvTax">—</span></div>
+          <div class="pv-row"><span>Dobândă netă estimată</span><span id="pvNet">—</span></div>
+          <div class="pv-row pv-total"><span>Valoare la scadență</span><span id="pvMaturity">—</span></div>
+          <div class="pv-row"><span>Data scadenței</span><span id="pvDate">—</span></div>
+        </div>
+
+        <!-- BUG 14: IBAN again in clear -->
+        <div class="info">Fondurile se transferă din contul <strong>RO49 MERI 1B31 0075 9384 0000</strong>.</div>
+
+        <!-- BUG 3: a large, months-long, irreversible money movement with no
+             confirmation step and no step-up authentication (OTP / password).
+             BUG 12: the button is never disabled and there is no in-flight guard. -->
+        <button type="submit" id="depBtn">Deschide depozit</button>
+        <div class="msg" id="msg"></div>
+      </form>
+    </div>
+
+    <div class="my-dep">
+      <h2>Depozitele mele</h2>
+      <ul id="depList"></ul>
+    </div>
+
+    <div class="liq-panel" id="liqPanel" hidden>
+      <div class="lp-head">
+        <span id="lpTitle">—</span>
+        <span class="lp-close" id="lpClose" title="Închide">&times;</span>
+      </div>
+      <div class="pp-lines">
+        <div><span>Principal</span><span id="lpPrincipal">—</span></div>
+        <div><span>Zile scurse</span><span id="lpDays">—</span></div>
+        <div><span>Dobândă recalculată (penalizare, 0,25% p.a.)</span><span id="lpPenalty">—</span></div>
+        <div class="pp-total"><span>Vei primi</span><span id="lpPayout">—</span></div>
+      </div>
+      <!-- BUG 3 / BUG 11: one click liquidates the deposit; the payout actually
+           credited is NOT the "Vei primi" figure above. -->
+      <button type="button" id="liqBtn">Confirmă lichidarea anticipată</button>
+      <div class="msg" id="liqMsg"></div>
+    </div>
+
+    <div class="maturities">
+      <h2>Scadențe</h2>
+      <!-- BUG 9: running this again re-pays every already-matured deposit.
+           BUG 10: auto-renewal here is silent and reuses the old rate. -->
+      <button type="button" id="runMatBtn">Rulează scadențele</button>
+    </div>
+
+    <div class="history">
+      <h2>Istoric</h2>
+      <ul id="histList"><li class="empty">Nicio operațiune încă.</li></ul>
+    </div>
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>

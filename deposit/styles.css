@@ -1,0 +1,189 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+
+body {
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #eef2f6;
+  color: #1c2733;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+.card {
+  background: #fff;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(20, 40, 70, 0.12);
+  padding: 30px 30px 26px;
+}
+.brand { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.brand .dot { width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(135deg, #0a5cff, #00b3a4); }
+.brand span { font-weight: 700; font-size: 16px; }
+
+h1 { font-size: 20px; margin-bottom: 4px; }
+.sub { font-size: 13px; color: #6b7a8d; margin-bottom: 6px; }
+.today { font-size: 12px; color: #35485c; font-weight: 600; margin-bottom: 20px; }
+h2 { font-size: 13px; color: #6b7a8d; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .5px; }
+
+.rates { margin-bottom: 22px; }
+/* BUG 16: nowrap row of 4 cells, no wrap and no horizontal scroll container —
+   at ~375px the cells + gaps + card padding are wider than the card and the
+   last cell is pushed past the card edge. */
+.rate-table {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+.rate-cell {
+  flex: 0 0 auto;
+  min-width: 84px;
+  background: #f4f7fa;
+  border-radius: 8px;
+  padding: 8px 10px;
+  text-align: center;
+  white-space: nowrap;
+}
+.rate-cell span { display: block; font-size: 11px; color: #6b7a8d; }
+.rate-cell strong { font-size: 15px; }
+.rate-note { font-size: 11px; color: #6b7a8d; margin-top: 8px; }
+
+.new-dep { margin-bottom: 22px; }
+
+.field { margin-bottom: 14px; }
+label, .pseudo-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #35485c; }
+input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #c6d2df;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  background: #fff;
+}
+input[type="text"]:focus {
+  border-color: #0a5cff;
+  box-shadow: 0 0 0 3px rgba(10, 92, 255, .15);
+}
+.hint { font-size: 12px; color: #6b7a8d; margin-top: 4px; }
+
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+/* BUG 15: styled to look like a segmented control but it is a <span> — no
+   tabindex, no role, no keyboard operability. */
+.chip {
+  flex: 1;
+  text-align: center;
+  padding: 9px 6px;
+  border: 1px solid #c6d2df;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #35485c;
+  cursor: pointer;
+  background: #fff;
+  white-space: nowrap;
+}
+.chip.active { border-color: #0a5cff; background: #eef4ff; color: #0a5cff; }
+
+.check { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: #35485c; margin-bottom: 14px; }
+.check input { width: auto; }
+
+.preview {
+  background: #f4f7fa;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  color: #35485c;
+}
+.pv-row { display: flex; justify-content: space-between; padding: 3px 0; gap: 10px; }
+.pv-total { border-top: 1px solid #dbe3ec; margin-top: 4px; padding-top: 6px; font-weight: 700; font-size: 15px; }
+
+.info { font-size: 12px; color: #6b7a8d; background: #f4f7fa; border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; }
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: #0a5cff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+button[type="submit"]:hover, #liqBtn:hover { background: #0949cc; }
+#runMatBtn {
+  background: #eef2f6;
+  color: #35485c;
+  border: 1px solid #c6d2df;
+  font-size: 13px;
+  padding: 9px;
+}
+#runMatBtn:hover { background: #e3e9f0; }
+
+.msg { font-size: 13px; margin-top: 12px; padding: 10px 12px; border-radius: 8px; display: none; }
+.msg.error { display: block; background: #fdecea; color: #b3261e; }
+.msg.success { display: block; background: #e7f5ec; color: #1b7a3d; }
+
+.my-dep { margin-bottom: 22px; }
+.my-dep ul { list-style: none; }
+/* BUG 16: nowrap row with no min-width:0 on the text column — a long denumire
+   (or the unmasked IBAN string) pushes the amount / "Lichidează" off the right
+   edge instead of wrapping. */
+.dep-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid #edf1f5;
+  flex-wrap: nowrap;
+}
+.dep-row:last-child { border-bottom: none; }
+.dep-main { flex: 1; }
+.dep-name { font-size: 14px; font-weight: 600; white-space: nowrap; }
+.dep-meta { font-size: 12px; color: #6b7a8d; margin-top: 3px; white-space: nowrap; }
+.dep-right { text-align: right; white-space: nowrap; min-width: 96px; }
+.dep-sum { font-size: 14px; font-weight: 700; }
+/* BUG 15: link-styled <span>, not keyboard reachable */
+.liq-link { display: inline-block; margin-top: 4px; font-size: 12px; font-weight: 600; color: #0a5cff; cursor: pointer; }
+
+.tag { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 5px; margin-left: 4px; }
+.tag.ok { background: #eef2f6; color: #6b7a8d; }
+.tag.due { background: #fdecea; color: #b3261e; }
+.tag.renew { background: #e7f1ff; color: #0a5cff; }
+
+.liq-panel {
+  border: 1px solid #dbe3ec;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 22px;
+  background: #fbfdff;
+}
+.lp-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+.lp-close { cursor: pointer; font-size: 20px; line-height: 1; color: #6b7a8d; }
+.pp-lines { font-size: 13px; color: #35485c; margin-bottom: 14px; }
+.pp-lines > div { display: flex; justify-content: space-between; padding: 3px 0; gap: 10px; }
+.pp-total { border-top: 1px solid #dbe3ec; margin-top: 4px; padding-top: 6px; font-weight: 700; }
+
+.maturities { margin-bottom: 22px; }
+
+.history ul { list-style: none; font-size: 13px; }
+/* BUG 16: long history rows (denumire notes, the unmasked IBAN) are clipped */
+.history li {
+  padding: 8px 0;
+  border-bottom: 1px solid #edf1f5;
+  color: #35485c;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.history li:last-child { border-bottom: none; }
+.empty { color: #a3b1c0; }
