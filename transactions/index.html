@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian Bank — Tranzacții și extras de cont</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="card">
+    <div class="brand"><div class="dot"></div><span>Meridian Bank</span></div>
+    <h1>Tranzacții și extras de cont</h1>
+    <div class="sub">Cont curent · IBAN RO49 MERI 1B31 0075 9384 0000</div>
+    <div class="today">Azi: vineri, 4 septembrie 2026, ora 11:00</div>
+
+    <div class="balances">
+      <div class="bal">
+        <span>Sold contabil</span>
+        <strong id="balBook">—</strong>
+      </div>
+      <!-- BUG 1: "Sold disponibil" subtracts every line still in status
+           "Autorizat". The fuel pre-authorisation of 500,00 was already settled
+           at 200,00 (a separate "Decontat" line) but its hold was never
+           released, so the 500 is held on top of the 200 that was charged. -->
+      <div class="bal">
+        <span>Sold disponibil</span>
+        <strong id="balAvail">—</strong>
+      </div>
+    </div>
+    <div class="bal-note" id="holdNote">—</div>
+
+    <div class="filters">
+      <h2>Filtre</h2>
+      <!-- BUG 17: these are <span>, not <label for>, so clicking the text does
+           not focus the field and a screen reader gets no accessible name.
+           BUG 18: 4 fixed-width columns, no wrap — the bar overflows the card
+           at ~375px. -->
+      <div class="filter-grid">
+        <div class="f">
+          <span class="pseudo-label">De la</span>
+          <input type="date" id="fFrom">
+        </div>
+        <div class="f">
+          <span class="pseudo-label">Până la</span>
+          <!-- BUG 5: the end date is compared with ">=", so a transaction dated
+               exactly on "Până la" is filtered out. -->
+          <input type="date" id="fTo">
+        </div>
+        <div class="f">
+          <span class="pseudo-label">Tip</span>
+          <select id="fType">
+            <option value="toate">Toate</option>
+            <option value="in">Intrări</option>
+            <option value="out">Ieșiri</option>
+          </select>
+        </div>
+        <div class="f">
+          <span class="pseudo-label">Sumă minimă (RON)</span>
+          <!-- BUG 6: text field read with parseFloat, no locale normalisation
+               and no validation. -->
+          <input type="text" id="fMin" placeholder="ex. 100" autocomplete="off">
+        </div>
+      </div>
+      <div class="f f-wide">
+        <span class="pseudo-label">Caută în descriere</span>
+        <!-- BUG 7: matched with indexOf(...) === 0 on the raw strings —
+             case-sensitive and only matches the beginning of the description. -->
+        <input type="text" id="fText" placeholder="ex. Kaufland" autocomplete="off">
+      </div>
+      <div class="filter-actions">
+        <button type="button" id="applyBtn">Aplică filtre</button>
+        <button type="button" class="ghost" id="resetBtn">Resetează</button>
+        <!-- BUG 8: exports the full list, not what the filters are showing.
+             The "Notă" column is written into the CSV unescaped. -->
+        <button type="button" class="ghost" id="csvBtn">Exportă CSV</button>
+      </div>
+    </div>
+
+    <div class="list-head">
+      <h2>Tranzacții</h2>
+      <span class="count" id="count">—</span>
+    </div>
+    <!-- BUG 3: rows are ordered by the formatted "dd.mm.yyyy" string.
+         BUG 4: "Sold după" is walked over that same displayed order.
+         BUG 17: rows are <li> with a click handler — no tabindex, no role, so
+         the details panel cannot be opened with the keyboard. -->
+    <ul class="tx" id="txList"></ul>
+
+    <div class="detail" id="detail" hidden>
+      <div class="d-head">
+        <span id="dTitle">—</span>
+        <span class="d-close" id="dClose" title="Închide">&times;</span>
+      </div>
+      <div class="d-lines">
+        <div><span>Data tranzacției</span><span id="dDate">—</span></div>
+        <div><span>Data decontării</span><span id="dSettle">—</span></div>
+        <div><span>Sumă</span><span id="dAmount">—</span></div>
+        <div><span>Status</span><span id="dStatus">—</span></div>
+        <!-- BUG 10: the card number is printed in full. A card PAN must be
+             masked (only the last 4 digits). -->
+        <div><span>Card</span><span id="dCard">—</span></div>
+        <div><span>Cod autorizare</span><span id="dAuth">—</span></div>
+        <div><span>Terminal</span><span id="dTerm">—</span></div>
+      </div>
+
+      <div class="d-note">
+        <label for="noteInput">Notă personală</label>
+        <input type="text" id="noteInput" placeholder="ex. bon pentru decont" autocomplete="off">
+        <button type="button" class="ghost" id="noteBtn">Salvează nota</button>
+      </div>
+
+      <div class="d-dispute">
+        <!-- BUG 11: this 60-day rule is text only — nothing enforces it.
+             BUG 12: the button is also active on transactions still in
+             status "Autorizat", which are not settled yet.
+             BUG 13: one click, no confirmation and no step-up authentication.
+             BUG 14: the amount is credited back silently — no reference
+             number, no line in the list, no audit entry anywhere. -->
+        <div class="hint">Poți contesta o tranzacție în maximum 60 de zile de la data decontării.</div>
+        <button type="button" id="dispBtn">Contestă tranzacția</button>
+      </div>
+      <div class="msg" id="dMsg"></div>
+    </div>
+
+    <div class="statement">
+      <h2>Extras lunar</h2>
+      <div class="hint">Extrasul pentru august 2026. Comision emitere extras: 5,00 RON.</div>
+      <!-- BUG 15: every press re-charges the 5,00 RON fee and appends another
+           copy of the same "Extras nr. 8/2026".
+           BUG 16: the totals are computed over the whole transaction array,
+           not over the lines the extras actually contains. -->
+      <button type="button" id="stmtBtn">Generează extrasul lunar</button>
+      <div id="stmtOut"></div>
+    </div>
+
+    <div class="export" id="csvBox" hidden>
+      <h2>Export CSV</h2>
+      <pre id="csvOut"></pre>
+    </div>
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>

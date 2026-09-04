@@ -17,6 +17,7 @@ no build step, no dependencies, no backend. Open `index.html` in a browser and t
 | Currency exchange | [`exchange/index.html`](exchange/index.html) | Multi-currency exchange ("Meridian Bank"), user logged in, balances 8.500,00 RON / 320,00 EUR / 150,00 USD | 14 planted |
 | Bill payment | [`bills/index.html`](bills/index.html) | Bill / utilities payment ("Meridian Bank"), user logged in, balance 4.200,00 RON, 5 outstanding invoices, scheduling + a simulated scheduler | 16 planted |
 | Term deposits | [`deposit/index.html`](deposit/index.html) | Term-deposit ("depozit la termen") page ("Meridian Bank"), user logged in, balance 25.000,00 RON, 3 existing deposits, interest/tax preview + early liquidation + a simulated maturity batch | 15 planted |
+| Transactions / statement | [`transactions/index.html`](transactions/index.html) | Account transactions ("Meridian Bank"), user logged in, sold contabil 7.430,00 RON vs. sold disponibil, 14 lines incl. pending pre-authorisations, filters + CSV export + dispute + a monthly-statement batch | 18 planted |
 
 "Meridian" is a made-up name — not real branding.
 
