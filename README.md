@@ -65,6 +65,25 @@ python3 -m http.server 8000
 - **UI / GUI** — overlapping elements, responsive layout breakage at narrow widths
 - **Data integrity** — a displayed value disagreeing with the committed value
 
+## Automated tests (Selenium)
+
+[`selenium-tests/`](selenium-tests/) holds Selenium WebDriver + Jest tests written
+against the apps above. Each test file opens its app by a relative path
+(e.g. `../payment/index.html`), so the apps themselves stay dependency-free.
+
+| Test file | App under test |
+|-----------|----------------|
+| [`payment.selenium.test.js`](selenium-tests/payment.selenium.test.js) | Payment / transfer |
+
+```bash
+cd selenium-tests
+npm install
+npm test
+```
+
+The tests drive Brave (`/Applications/Brave Browser.app`); on the first run
+Selenium downloads a matching chromedriver automatically.
+
 ## Adding a new practice app
 
 Create `<name>/index.html`, `<name>/styles.css`, `<name>/script.js` and

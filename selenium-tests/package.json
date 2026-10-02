@@ -1,0 +1,14 @@
+{
+  "name": "selenium-tests",
+  "private": true,
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "testTimeout": 60000
+  },
+  "devDependencies": {
+    "jest": "^30.5.2",
+    "selenium-webdriver": "^4.50.0"
+  }
+}
