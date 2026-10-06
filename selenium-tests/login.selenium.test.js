@@ -26,10 +26,30 @@ beforeEach(async () => {
   await driver.get(LOGIN_URL);
 });
 
-test("TC1 - ", async () => {
+test("TC1 - autentificare valida ", async () => {
   // Precondiții: pagina de login e deschisă (în beforeEach)
 
   // Pași
+  await driver.findElement(By.id("emailField")).sendKeys("client@meridian.ro");
+  await driver.findElement(By.id("passwordField")).sendKeys("Parola123");
+  await driver.findElement(By.id("submitBtn")).click();
 
   // Rezultat așteptat
+  const mesaj = await driver.findElement(By.id("message"));
+  await driver.wait(until.elementIsVisible(mesaj), 5000);
+  expect(await mesaj.getText()).toBe("Autentificare reușită. Te redirecționăm..."); 
+
+});
+
+
+test("TC2 - autentificare fara email introdus", async () => {
+  // Precondiții: pagina de login e deschisă (în beforeEach)
+
+  await driver.findElement(By.id("passwordField")).sendKeys("Parola123");
+  await driver.findElement(By.id("submitBtn")).click();
+
+  const mesaj = await driver.findElement(By.id("message"));
+  await driver.wait(until.elementIsVisible(mesaj), 5000);
+  expect(await mesaj.getText()).toBe("Adresa de email este obligatorie.");
+  expect(await mesaj.getAttribute("class")).toContain("error");
 });
