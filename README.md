@@ -83,7 +83,12 @@ npm test
 ```
 
 The tests drive Brave (`/Applications/Brave Browser.app`); on the first run
-Selenium downloads a matching chromedriver automatically.
+Selenium downloads a matching chromedriver automatically. Brave runs headless
+(no window) by default; prefix the command with `HEADED=1` to watch it:
+
+```bash
+HEADED=1 npx jest login
+```
 
 ## Adding a new practice app
 

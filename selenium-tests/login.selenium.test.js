@@ -16,8 +16,9 @@ beforeAll(async () => {
     // Brave se închide brusc dacă driverul îi trimite setarea --test-type=webdriver,
     // așa că îi spunem driverului să n-o mai trimită.
     .excludeSwitches("test-type");
-  // Cu HEADLESS=1 în fața comenzii, Brave rulează ascuns, fără fereastră pe ecran.
-  if (process.env.HEADLESS) optiuni.addArguments("--headless=new");
+  // Brave rulează ascuns, fără fereastră pe ecran.
+  // Ca să-l vezi, pune HEADED=1 în fața comenzii: HEADED=1 npx jest login
+  if (!process.env.HEADED) optiuni.addArguments("--headless=new");
   driver = await new Builder().forBrowser("chrome").setChromeOptions(optiuni).build();
 });
 
@@ -29,13 +30,20 @@ beforeEach(async () => {
   await driver.get(LOGIN_URL);
 });
 
+
+async function login(email, parola) {
+  // cei 3 pași, cu email și parola în loc de texte fixe
+  await driver.findElement(By.id("emailField")).sendKeys(email);
+  await driver.findElement(By.id("passwordField")).sendKeys(parola);
+  await driver.findElement(By.id("submitBtn")).click();
+
+};
+
 test("TC1 - autentificare valida ", async () => {
   // Precondiții: pagina de login e deschisă (în beforeEach)
 
   // Pași
-  await driver.findElement(By.id("emailField")).sendKeys("client@meridian.ro");
-  await driver.findElement(By.id("passwordField")).sendKeys("Parola123");
-  await driver.findElement(By.id("submitBtn")).click();
+  await login("client@meridian.ro", "Parola123");
 
   // Rezultat așteptat
   const mesaj = await driver.findElement(By.id("message"));
@@ -62,9 +70,8 @@ test("TC3 - autentificare cu parola gresita" ,async () => {
   // Precondiții: pagina de login e deschisă (în beforeEach)
 
   // Pasi
-  await driver.findElement(By.id("emailField")).sendKeys("client@meridian.ro");
-  await driver.findElement(By.id("passwordField")).sendKeys("Parola999");
-  await driver.findElement(By.id("submitBtn")).click();
+  await login("client@meridian.ro", "Parola999");
+
 
   // Rezultat asteptat
   const mesajp = await driver.findElement(By.id("message"));
@@ -109,9 +116,8 @@ test("TC6 - Autentificarea e refuzată când emailul conține caractere de SQL i
   //preconditii: pagina de login e deschisa (in beforeEach)
 
   //pasi 
-  await driver.findElement(By.id("emailField")).sendKeys("client@meridian.ro'--");
-  await driver.findElement(By.id("passwordField")).sendKeys("abc123");
-  await driver.findElement(By.id("submitBtn")).click();
+  await login("client@meridian.ro'--", "abc123");
+
 
   //rezultat asteptat
   const mesaja = await driver.findElement(By.id("message"));
@@ -131,6 +137,38 @@ test("TC7 - Tasta Tab mută cursorul din câmpul de email în câmpul de parolă
   //rezultat asteptat
   const activ = await driver.switchTo().activeElement();
   expect(await activ.getAttribute("id")).toBe("passwordField");   
+  
+
+});
+
+test("TC8 - Click pe eticheta „Adresă de email” mută cursorul în câmpul de email" , async () => {
+  //preconditii: pagina de login e deschisa (in beforeEach)
+
+  //pasi 
+  await driver.findElement(By.xpath("//label[text() ='Adresă de email']")).click();
+
+  //rezultat asteptat
+  const act = await driver.switchTo().activeElement();
+  expect(await act.getAttribute("id")).toBe("emailField");   
+});
+
+test.each([
+  // [email, parola, mesajAsteptat]
+  ["", "Parola123", "Adresa de email este obligatorie."],   
+  ["alt@meridian.ro", "Parola123", "Cont inexistent."], 
+  ["client@meridian.ro", "Parola999", "Parola introdusă este greșită."],  
+  ["client@meridian.ro'--", "abc123", "Cont inexistent."],    
+
+])("TC9 - login invalid cu %s / %s", async (email, parola, mesajAsteptat) => {
+  //preconditii: pagina de login este deschisa (in beforeEach)
+  // pași
+  await login(email,parola);
+
+  // rezultat așteptat
+  const mesajj = await driver.findElement(By.id("message"));
+  await driver.wait(until.elementIsVisible(mesajj), 5000);
+  expect(await mesajj.getText()).toBe(mesajAsteptat);
+  expect(await mesajj.getAttribute("class")).toContain("error");
   
 
 });

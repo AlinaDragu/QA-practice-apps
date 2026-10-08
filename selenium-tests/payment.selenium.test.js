@@ -15,6 +15,9 @@ beforeAll(async () => {
     // Brave se închide brusc dacă driverul îi trimite setarea --test-type=webdriver,
     // așa că îi spunem driverului să n-o mai trimită.
     .excludeSwitches("test-type");
+  // Brave rulează ascuns, fără fereastră pe ecran.
+  // Ca să-l vezi, pune HEADED=1 în fața comenzii: HEADED=1 npx jest payment
+  if (!process.env.HEADED) optiuni.addArguments("--headless=new");
   driver = await new Builder().forBrowser("chrome").setChromeOptions(optiuni).build();
 });
 
