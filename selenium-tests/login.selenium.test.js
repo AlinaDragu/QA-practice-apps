@@ -169,6 +169,5 @@ test.each([
   await driver.wait(until.elementIsVisible(mesajj), 5000);
   expect(await mesajj.getText()).toBe(mesajAsteptat);
   expect(await mesajj.getAttribute("class")).toContain("error");
-  
 
 });
