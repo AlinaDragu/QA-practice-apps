@@ -1,6 +1,6 @@
 const path = require("path");
 const { pathToFileURL } = require("url");
-const { Builder, By, until, Select } = require("selenium-webdriver");
+const { Builder, By, until, Select , Key} = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
 
 // Legătura cu pagina testată: ../register/index.html, relativ la acest fișier
@@ -41,6 +41,7 @@ async function completeazaFormularValid() {
   await driver.findElement(By.id("phoneField")).sendKeys("0722123456");
   const county = new Select(await driver.findElement(By.id("countyField")));
   await county.selectByVisibleText("Cluj");
+  await driver.findElement(By.id("terms")).click();
 };
 
 
@@ -123,5 +124,68 @@ test("TC6 - email fara format valid", async () => {
   //preconditii: pagina "deschide cont curent" e deschisa (in beforeEach)
 
   //pasi 
+  await completeazaFormularValid();
+  await driver.findElement(By.id("emailField")).clear();
+  await driver.findElement(By.id("emailField")).sendKeys("abc");
+  await driver.findElement(By.id("createBtn")).click();
 
+  //rezultatul asteptat
+  const mesaje = await driver.findElement(By.id("message"));
+  expect(await mesaje.getText()).toBe("Adresa de email nu este validă.");
+  expect(await mesaje.getAttribute("class")).toContain("error");
+
+});
+
+
+test("TC7 - contul se creeaza o singura data", async () => {
+  //preconditii: pagina "deschide cont curent" e deschisa (in beforeEach)
+
+  //pasi 
+  await completeazaFormularValid();
+  await driver.findElement(By.id("createBtn")).click();
+  await driver.findElement(By.id("createBtn")).click();
+  await driver.findElement(By.id("createBtn")).click();
+
+  //rezultat asteptat 
+  const lista = await driver.findElements(By.css("#logList li"));
+  expect(lista.length).toBe(1);
+  const mesaj = await driver.findElement(By.id("message"));
+  expect(await mesaj.getText()).toBe("Cont creat pentru ana.pop@exemplu.ro.");
+});
+
+
+test("TC8 - ordinea Tab", async () => {
+  //preconditii: pagina "deschide cont curent" e deschisa (in beforeEach)
+
+  //pasi
+  await driver.findElement(By.id("nameField")).click(); 
+  await driver.findElement(By.id("nameField")).sendKeys(Key.TAB);
+  
+  //rezultat asteptat 
+  const activ = await driver.switchTo().activeElement();
+  expect(await activ.getAttribute("id")).toBe("emailField"); 
+});
+
+
+
+test.each([
+  // [idcamp , mesajAsteptat]
+  ["nameField", "Introdu numele complet."],   
+  ["emailField", "Introdu adresa de email."], 
+  ["passField", "Introdu o parolă."],  
+  ["cnpField", "Introdu CNP-ul."],
+  ["dobField", "Introdu data nașterii."]    
+]) ("TC9 - campuri obligatorii %s / %s", async (idcamp , mesajAsteptat) => {
+  //preconditii: pagina "deschide cont curent" e deschisa (in beforeEach)
+
+  //pasi 
+  await completeazaFormularValid();
+  await driver.findElement(By.id(idcamp)).clear();
+  await driver.findElement(By.id("createBtn")).click();
+
+  //rezultat asteptat 
+  const mesajj = await driver.findElement(By.id("message"));
+  expect(await mesajj.getText()).toBe(mesajAsteptat);
+  expect(await mesajj.getAttribute("class")).toContain("error");
+  
 });
