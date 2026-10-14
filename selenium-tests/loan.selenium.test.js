@@ -1,6 +1,6 @@
 const path = require("path");
 const { pathToFileURL } = require("url");
-const { Builder, By } = require("selenium-webdriver");
+const { Builder, By, Key } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
 
 // Legătura cu pagina testată: ../loan/index.html, relativ la acest fișier
@@ -128,8 +128,49 @@ test.each([
   await driver.findElement(By.id("incomeField")).sendKeys("5000");
   await driver.findElement(By.id("calcBtn")).click();
   
-    //rezultat asteptat 
-    const mesajj = await driver.findElement(By.id("message"));
-    expect(await mesajj.getAttribute("class")).toContain(clasaAsteptata);
+  //rezultat asteptat 
+  const mesajj = await driver.findElement(By.id("message"));
+  expect(await mesajj.getAttribute("class")).toContain(clasaAsteptata);
+
+});
+
+test("TC7 - sliderul actualizeaza campul", async () => {
+  //preconditii: pagina "simulare credit" e deschisa (in beforeEach)
+
+  //pasi
+  await driver.findElement(By.id("amountRange")).sendKeys(Key.END);
+
+  //rezultat asteptat
+  const suma = await driver.findElement(By.id("amountField"));
+  expect(await suma.getAttribute("value")).toBe("150000");
+
+});
+
+test("TC8 - campul actualizeaza sliderul", async () => {
+  //preconditii: pagina "simulare credit" e deschisa (in beforeEach)
+
+  //pasi
+  await driver.findElement(By.id("amountField")).clear();
+  await driver.findElement(By.id("amountField")).sendKeys("100000");
+
+  //rezultat asteptat
+  const sume = await driver.findElement(By.id("amountRange"));
+  expect(await sume.getAttribute("value")).toBe("100000");
+});
+
+
+test("TC9 - rezuultatele vechi raman pe ecran", async () => {
+  //preconditii: pagina "simulare credit" e deschisa (in beforeEach)
+
+  //pasi 
+  // suma 20000 si perioada 36 raman cele deja completate
+  await driver.findElement(By.id("incomeField")).sendKeys("5000");
+  await driver.findElement(By.id("calcBtn")).click();
+  const ratalun = await driver.findElement(By.id("rataOut")).getText();
+  await driver.findElement(By.id("amountRange")).sendKeys(Key.END);
+
+  //rezultatul asteptat
+  const rataNoua = await driver.findElement(By.id("rataOut")).getText();
+  expect(rataNoua).not.toBe(ratalun);
 
 });
