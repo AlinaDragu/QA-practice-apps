@@ -113,7 +113,7 @@ test("TC5 - sumele sunt afisate in format romanesc", async () => {
 });
 
 test.each([
-  // [suma, clasa asteptata]
+  // [suma, clasaAsteptata]
   ["999", "error"],   
   ["1000", "success"], 
   ["150000", "success"],  

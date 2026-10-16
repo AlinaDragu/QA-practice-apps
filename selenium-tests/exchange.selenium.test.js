@@ -100,7 +100,7 @@ test("TC4 - comisionul se percepe", async() => {
 });
 
 test("TC5 - referinta se afiseaza ca text, nu ca cod", async () => {
-  // preconditii: pagina "schimb valutar" e deschisa ("in beforeEach")
+  // preconditii: pagina "schimb valutar" e deschisa (in beforeEach)
 
   // pasi 
   await driver.findElement(By.id("refField")).sendKeys("<b>test</b>");
@@ -110,4 +110,80 @@ test("TC5 - referinta se afiseaza ca text, nu ca cod", async () => {
   const schimburief = await driver.findElement(By.id("logList"));
   expect(await schimburief.getText()).toContain("<b>test</b>");
 
+});
+
+test("TC6 - suma primita e aceeasi cu cea afisata inainte", async () => {
+  // preconditii: pagina "schimb valutar" e deschisa (in beforeEach)
+
+  // pasi
+  await driver.findElement(By.id("amountField")).clear();
+  await driver.findElement(By.id("amountField")).sendKeys("133.33");
+  const monedaeuro = new Select(await driver.findElement(By.id("fromCur")));
+  await monedaeuro.selectByValue("EUR");
+  const monedaron = new Select(await driver.findElement(By.id("toCur")));
+  await monedaron.selectByValue("RON");
+  const soldInainte = await driver.findElement(By.id("receiveOut")).getText();
+  await driver.findElement(By.id("fxBtn")).click();
+
+  // rezultat asteptat
+  const soldDupa = await driver.findElement(By.id("logList")).getText();
+  expect(soldDupa).toContain(soldInainte);
+
+});
+
+test.each([
+// [suma, monedaDin, monedaIn, rezAsteptat]
+["100","EUR", "RON", 497.18],
+["100","USD", "RON", 458.34],
+["100","RON", "EUR", 20.11],
+["100","RON", "USD", 21.82],
+["100","EUR", "USD", 108.47]
+
+]) ("TC7- conversia e corecta pentru mai multe perechi de monede %s / %s / %s / %s", async (suma,monedaDin,monedaIn,rezAsteptat) => {
+  // preconditii: pagina "schimb valutar" e deschisa (in beforeEach)
+
+  // pasi
+  await driver.findElement(By.id("amountField")).clear();
+  await driver.findElement(By.id("amountField")).sendKeys(suma);
+  const monedaeur = new Select(await driver.findElement(By.id("fromCur")));
+  await monedaeur.selectByValue(monedaDin);
+  const monedaro = new Select(await driver.findElement(By.id("toCur")));
+  await monedaro.selectByValue(monedaIn);
+
+  // rezultat asteptat
+  const primit = await driver.findElement(By.id("receiveOut")).getText();
+  const primi = parseFloat(primit);
+  expect(primi).toBeCloseTo(rezAsteptat, 2);
+
+});
+
+test("TC8 - suma negativa e respinsa si soldul nu se schimba", async () => {
+  // preconditii: pagina "schimb valutar" e deschisa (in beforeEach)
+
+  //pasi
+  const ron = parseFloat(await driver.findElement(By.id("balRON")).getText());
+  await driver.findElement(By.id("amountField")).clear();
+  await driver.findElement(By.id("amountField")).sendKeys("-100");
+  await driver.findElement(By.id("fxBtn")).click();
+
+  // rezultat asteptat
+  const baniron = parseFloat(await driver.findElement(By.id("balRON")).getText());
+  const mesaj = await driver.findElement(By.id("message"));
+  expect(baniron).toBe(ron);
+  expect(await mesaj.getAttribute("class")).toContain("error");
+});
+
+test.each([
+// [idLista]
+["fromCur"],
+["toCur"]
+
+])("TC9 - listele de monede au eticheta %s", async (idLista) => {
+  // preconditii: pagina "schimb valutar" e deschisa (in beforeEach)
+
+  // pasi: niciunul, verificam pagina asa cum se deschide
+
+  // rezultat asteptat
+  const etichete = await driver.findElements(By.css(`label[for='${idLista}']`));
+  expect(etichete.length).toBe(1);
 });
