@@ -78,6 +78,7 @@ against the apps above. Each test file opens its app by a relative path
 | [`register.selenium.test.js`](selenium-tests/register.selenium.test.js) | Registration |
 | [`loan.selenium.test.js`](selenium-tests/loan.selenium.test.js) | Loan simulator |
 | [`exchange.selenium.test.js`](selenium-tests/exchange.selenium.test.js) | Currency exchange |
+| [`bills.selenium.test.js`](selenium-tests/bills.selenium.test.js) | Bill payment |
 
 ```bash
 cd selenium-tests
