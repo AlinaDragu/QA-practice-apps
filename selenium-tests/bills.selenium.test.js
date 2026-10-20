@@ -116,3 +116,59 @@ test("TC5 - antetul total de plata n facturi se actualizeaza dupa o plata", asyn
   const antet = parseFloat(textAntet);
   expect(antet).toBe(lista.length);
 });
+
+test("TC6 - factura Enel ramane in lista dupa o plata partiala", async () => {
+  // preconditii: pagina "plata facturi" e deschisa (in beforeEach)
+
+  // pasi
+  await driver.findElement(By.css("span[data-open='EN-4471']")).click();
+  await driver.findElement(By.id("amountInput")).clear();
+  await driver.findElement(By.id("amountInput")).sendKeys("50");
+  await driver.findElement(By.id("payBtn")).click();
+
+  // rezultat asteptat
+  const enel = await driver.findElements(By.css("[data-open='EN-4471']"));
+  expect(enel.length).toBeGreaterThan(0);
+
+});
+
+test("TC7 - factura cu scadenta azi nu e restanta (Digi)", async () => {
+  // preconditii: pagina "plata facturi" e deschisa (in beforeEach)
+
+  // pasi
+  // eticheta din dreptul facturii digi (fara click)
+
+  // rezultat asteptat
+  const eticheta = await driver.findElement(By.css("[data-open='DG-5567'] .tag")).getText();
+  expect(eticheta).toContain("Scadent");
+
+});
+
+test("TC8 - plata programata se executa o singura data enel", async () => {
+  // preconditii: pagina "plata facturi" e deschisa (in beforeEach)
+
+  // pasi
+  await driver.findElement(By.css("span[data-open='EN-4471']")).click();
+  await driver.findElement(By.id("schedChk")).click();
+  await driver.findElement(By.id("schedDate")).sendKeys("02092026");
+  await driver.findElement(By.id("payBtn")).click();
+  await driver.findElement(By.id("runSchedBtn")).click();
+  await driver.findElement(By.id("runSchedBtn")).click();
+
+  // rezultat asteptat
+  const listaP = await driver.findElements(By.css("#histList li"));
+  expect(listaP.length).toBe(1);
+});
+
+
+test("TC9 - cardul apare mascat in panoul de plata", async () => {
+  // preconditii: pagina "plata facturi" e deschisa (in befoareEach)
+
+  // pasi
+  await driver.findElement(By.css("span[data-open='AP-1290']")).click();
+
+  // rezultat asteptat
+  const card = await driver.findElement(By.id("ppCard")).getText();
+  expect(card).not.toContain("4539 8842 1100");
+  expect(card).toContain("4821");
+});
