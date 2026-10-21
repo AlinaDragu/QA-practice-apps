@@ -119,7 +119,7 @@ test.each([
   ["150000", "success"],  
   ["150001", "error"],
   ["-5000", "error"]    
-]) ("TC6 - suma creditului e acceptata doar intre 1.000 si 150.000  RON %s / %s", async (suma, clasaAsteptata) => {
+]) ("TC6 - suma creditului e acceptata doar intre 1.000 si 150.000 RON %s / %s", async (suma, clasaAsteptata) => {
   //preconditii: pagina "simulare credit" e deschisa (in beforeEach)
 
   //pasi 
@@ -159,7 +159,7 @@ test("TC8 - campul actualizeaza sliderul", async () => {
 });
 
 
-test("TC9 - rezuultatele vechi raman pe ecran", async () => {
+test("TC9 - rezultatele vechi raman pe ecran", async () => {
   //preconditii: pagina "simulare credit" e deschisa (in beforeEach)
 
   //pasi 

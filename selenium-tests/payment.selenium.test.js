@@ -29,7 +29,7 @@ beforeEach(async () => {
   await driver.get(PAYMENT_URL);
 });
 
-test("TC1 – transfer valid în RON", async () => {
+test("TC1 - transfer valid în RON", async () => {
   // Precondiții: pagina de plată e deschisă (in beforeEach)
 
   // Pași
@@ -95,7 +95,7 @@ test("TC4 - campul PIN ascunde cifrele introduse", async () => {
 
 });
 
-test("TC5 - plata valida in EUR ", async () => {
+test("TC5 - plata valida in EUR", async () => {
   // Precondiții pagina e deschisă (în beforeEach)
 
   // Pași
@@ -143,7 +143,7 @@ test("TC7 - previzualizarea se actualizeaza cand schimbi moneda dupa ce ai scris
 
 });
 
-test("TC8 - plata nu se dubleaza la dublu-click pe 'Confirma plata' ", async () => {
+test("TC8 - plata nu se dubleaza la dublu-click pe 'Confirma plata'", async () => {
   // Precondiții pagina e deschisă (în beforeEach)
 
   // Pași

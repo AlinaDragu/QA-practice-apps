@@ -139,7 +139,7 @@ test.each([
 ["100","RON", "USD", 21.82],
 ["100","EUR", "USD", 108.47]
 
-]) ("TC7- conversia e corecta pentru mai multe perechi de monede %s / %s / %s / %s", async (suma,monedaDin,monedaIn,rezAsteptat) => {
+]) ("TC7 - conversia e corecta pentru mai multe perechi de monede %s / %s / %s / %s", async (suma,monedaDin,monedaIn,rezAsteptat) => {
   // preconditii: pagina "schimb valutar" e deschisa (in beforeEach)
 
   // pasi

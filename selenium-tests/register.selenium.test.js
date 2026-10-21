@@ -79,7 +79,7 @@ test("TC2 - bifa de marketing nu e bifată de la început", async () => {
 });
 
 
-test("TC3 - parole diferite",async () => {
+test("TC3 - parole diferite", async () => {
   //preconditii: pagina "Deschide cont curent" e deschisa (in beforeEach)
 
   //pasi

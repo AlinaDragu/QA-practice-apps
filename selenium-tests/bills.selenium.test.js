@@ -46,7 +46,7 @@ test("TC1 - plată integrală a facturii Enel", async () => {
 
 });
 
-test("TC2- panoul de plata se deschide si se inchide", async () => {
+test("TC2 - panoul de plata se deschide si se inchide", async () => {
   // preconditii: pagina "plata facturi" e deschisa (in beforeEach)
 
   // pasi
@@ -73,7 +73,7 @@ test("TC2- panoul de plata se deschide si se inchide", async () => {
 });
 
 
-test("TC3 - totalul de plata =. factura + penalitatea(Vodafone)", async () => {
+test("TC3 - totalul de plata = factura + penalitatea (Vodafone)", async () => {
   // preconditii: pagina "plata facturi" e deschisa (in beforeEach)
 
   // pasi
@@ -103,7 +103,7 @@ test("TC4 - penalitatea din totalul de plata se incaseaza efectiv (Engie)", asyn
   expect(totalPlataDupa).toContain(totalPlataInainte);
 });
 
-test("TC5 - antetul total de plata n facturi se actualizeaza dupa o plata", async () => {
+test("TC5 - antetul „Total de plata (N facturi)” se actualizeaza dupa o plata", async () => {
   // preconditii: pagina "plata facturi" e deschisa (in beforeEach)
 
   // pasi
@@ -144,7 +144,7 @@ test("TC7 - factura cu scadenta azi nu e restanta (Digi)", async () => {
 
 });
 
-test("TC8 - plata programata se executa o singura data enel", async () => {
+test("TC8 - plata programata se executa o singura data (Enel)", async () => {
   // preconditii: pagina "plata facturi" e deschisa (in beforeEach)
 
   // pasi

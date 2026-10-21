@@ -39,7 +39,7 @@ async function login(email, parola) {
 
 };
 
-test("TC1 - autentificare valida ", async () => {
+test("TC1 - autentificare valida", async () => {
   // Precondiții: pagina de login e deschisă (în beforeEach)
 
   // Pași
@@ -66,7 +66,7 @@ test("TC2 - autentificare fara email introdus", async () => {
 });
 
 
-test("TC3 - autentificare cu parola gresita" ,async () => {
+test("TC3 - autentificare cu parola gresita", async () => {
   // Precondiții: pagina de login e deschisă (în beforeEach)
 
   // Pasi
@@ -82,7 +82,7 @@ test("TC3 - autentificare cu parola gresita" ,async () => {
 });
 
 
-test("TC4 - Link-ul „Ai uitat parola?” duce la pagina de resetare a parolei " , async () => {
+test("TC4 - Link-ul „Ai uitat parola?” duce la pagina de resetare a parolei", async () => {
   //preconditii: pagina de login e deschisa (in beforeEach)
 
   //  pasi
@@ -94,7 +94,7 @@ test("TC4 - Link-ul „Ai uitat parola?” duce la pagina de resetare a parolei 
 });
 
 
-test("TC5 - Butonul „Autentificare” se dezactivează în timpul verificării" , async () => {
+test("TC5 - Butonul „Autentificare” se dezactivează în timpul verificării", async () => {
   // preconditii: pagina de login e deschisa (in beforeEach)
 
   //pasi
@@ -112,7 +112,7 @@ test("TC5 - Butonul „Autentificare” se dezactivează în timpul verificării
 });
 
 
-test("TC6 - Autentificarea e refuzată când emailul conține caractere de SQL injection " , async () => {
+test("TC6 - Autentificarea e refuzată când emailul conține caractere de SQL injection", async () => {
   //preconditii: pagina de login e deschisa (in beforeEach)
 
   //pasi 
@@ -141,7 +141,7 @@ test("TC7 - Tasta Tab mută cursorul din câmpul de email în câmpul de parolă
 
 });
 
-test("TC8 - Click pe eticheta „Adresă de email” mută cursorul în câmpul de email" , async () => {
+test("TC8 - Click pe eticheta „Adresă de email” mută cursorul în câmpul de email", async () => {
   //preconditii: pagina de login e deschisa (in beforeEach)
 
   //pasi 
