@@ -65,6 +65,12 @@ python3 -m http.server 8000
 - **UI / GUI** — overlapping elements, responsive layout breakage at narrow widths
 - **Data integrity** — a displayed value disagreeing with the committed value
 
+## Bug reports
+
+[`bug-reports/`](bug-reports/) holds sample bug reports from exploratory testing
+sessions on these apps: title, severity / priority, preconditions, steps to
+reproduce, expected vs. actual result.
+
 ## Automated tests (Selenium)
 
 [`selenium-tests/`](selenium-tests/) holds Selenium WebDriver + Jest tests written
