@@ -2,6 +2,7 @@ const path = require("path");
 const { pathToFileURL } = require("url");
 const { Builder, By } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
+const { text } = require("stream/consumers");
 
 
 // Legătura cu pagina testată: ../deposit/index.html, relativ la acest fișier
@@ -29,6 +30,10 @@ afterAll(async () => {
 beforeEach(async () => {
   await driver.get(DEPOSIT_URL);
 });
+
+function inNumar(text) {
+  return parseFloat(text.replaceAll(".", "").replace(",", "."));
+}
 
 test("TC1 - deschiderea unui depozit de 10.000 RON pe 12 luni", async () => {
   // Precondiții: pagina „Depozite la termen” e deschisă (în beforeEach)
@@ -64,4 +69,50 @@ test("TC2 - valoare la scadenta din previzualizare include doar dobanda neta", a
   const scadenta = parseFloat(textScadenta.replaceAll(".", "").replace(",", "."));
 
   expect(scadenta).toBeCloseTo(suma + neta, 2);
+});
+
+
+test("TC3 - previzualizarea dupa schimbarea termenului", async () => {
+  // preconditii: pagina "depozite la termen" e deschisa (in beforeEach)
+
+  // pasi
+  await driver.findElement(By.id("amountInput")).sendKeys("10000");
+  await driver.findElement(By.css("span[data-months='3']")).click();
+
+  // rezultat asteptat
+  const rata = await driver.findElement(By.id("pvRate"));
+  expect(await rata.getText()).toBe("3,00%");
+  const dobanda = await driver.findElement(By.id("pvGross"));
+  expect(await dobanda.getText()).toBe("75,00 RON");
+});
+
+
+test("TC4 - data scadentei nu cade in weekend", async () => {
+  // preconditii: pagina "depozit la termen" e deschisa (in beforeEach)
+
+  // pasi
+  await driver.findElement(By.css("span[data-months='1']")).click();
+  await driver.findElement(By.id("amountInput")).sendKeys("10000");
+
+  // rezultat asteptat
+  
+  const textData = await driver.findElement(By.id("pvDate")).getText();   // "2026-10-03"
+  const zi = new Date(textData).getDay();
+  expect(zi).not.toBe(0);   
+  expect(zi).not.toBe(6);   
+
+});
+
+test("Tc5 - lichidare anticipata", async () => {
+  // preconditii: pagina "depozit la termen" e deschisa (in beforeEach)
+
+  // pasi
+  const soldInainte = inNumar(await driver.findElement(By.id("balance")).getText());   
+  await driver.findElement(By.css("span[data-liq='D-1003']")).click();
+  const promis = inNumar(await driver.findElement(By.id("lpPayout")).getText());       
+  await driver.findElement(By.id("liqBtn")).click();
+
+  // rezultat asteptat
+  const soldDupa = inNumar(await driver.findElement(By.id("balance")).getText());
+  expect(soldDupa).toBeCloseTo(soldInainte + promis, 2);
 });
