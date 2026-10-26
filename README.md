@@ -6,6 +6,9 @@ manual / exploratory QA practice.
 Each app is a folder with separate `index.html`, `styles.css` and `script.js` —
 no build step, no dependencies, no backend. Open `index.html` in a browser and test it.
 
+The one exception is [`api/`](api/): a small REST API (Node.js, no dependencies) for
+API testing with Postman — see [API testing](#api-testing-postman) below.
+
 ## Apps
 
 | App | File | Scenario | Bugs |
@@ -18,6 +21,7 @@ no build step, no dependencies, no backend. Open `index.html` in a browser and t
 | Bill payment | [`bills/index.html`](bills/index.html) | Bill / utilities payment ("Meridian Bank"), user logged in, balance 4.200,00 RON, 5 outstanding invoices, scheduling + a simulated scheduler | 16 planted |
 | Term deposits | [`deposit/index.html`](deposit/index.html) | Term-deposit ("depozit la termen") page ("Meridian Bank"), user logged in, balance 25.000,00 RON, 3 existing deposits, interest/tax preview + early liquidation + a simulated maturity batch | 15 planted |
 | Transactions / statement | [`transactions/index.html`](transactions/index.html) | Account transactions ("Meridian Bank"), user logged in, sold contabil 7.430,00 RON vs. sold disponibil, 14 lines incl. pending pre-authorisations, filters + CSV export + dispute + a monthly-statement batch | 18 planted |
+| Bank API | [`api/README.md`](api/README.md) | REST API ("Meridian Bank"): login with a Bearer token, accounts, transaction history, transfers with an idempotency key, saved beneficiaries (CRUD) — no page, tested with Postman | 17 planted |
 
 "Meridian" is a made-up name — not real branding.
 
@@ -64,6 +68,20 @@ python3 -m http.server 8000
 - **Accessibility** — keyboard tab order, label ↔ input association, focus
 - **UI / GUI** — overlapping elements, responsive layout breakage at narrow widths
 - **Data integrity** — a displayed value disagreeing with the committed value
+
+## API testing (Postman)
+
+[`api/`](api/) is a REST API instead of a page. Start it with Node.js (no
+`npm install` needed) and send requests to it from Postman or curl:
+
+```bash
+node api/server.js
+# → http://localhost:3000
+```
+
+[`api/README.md`](api/README.md) is its documentation — the specification you test
+against. The spoiler key is [`api/BUGS.md`](api/BUGS.md), as for the pages. Data lives
+in memory: restarting the server (or `POST /api/reset`) restores the starting state.
 
 ## Bug reports
 
