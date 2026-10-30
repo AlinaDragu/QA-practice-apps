@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DemoShop · Administrare</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>DemoShop</h1>
+      <p class="muted">Administrare magazin · <span id="azi"></span></p>
+    </div>
+    <a class="button" href="/consola" target="_blank" rel="noopener">Consolă SQL ↗</a>
+  </header>
+
+  <nav class="tabs">
+    <button type="button" data-tab="panou" class="active">Panou</button>
+    <button type="button" data-tab="comenzi">Comenzi</button>
+    <button type="button" data-tab="produse">Produse</button>
+    <button type="button" data-tab="clienti">Clienți</button>
+    <button type="button" data-tab="nou">Comandă nouă</button>
+  </nav>
+
+  <main>
+    <section id="panou">
+      <div class="cards">
+        <div class="card"><span class="muted">Comenzi totale</span><strong id="cardComenzi"></strong></div>
+        <div class="card"><span class="muted">Venituri</span><strong id="cardVenituri"></strong></div>
+        <div class="card"><span class="muted">Clienți activi</span><strong id="cardClienti"></strong></div>
+        <div class="card"><span class="muted">Produse fără stoc</span><strong id="cardStoc"></strong></div>
+      </div>
+    </section>
+
+    <section id="comenzi" hidden>
+      <h2>Toate comenzile (<span id="nrComenzi"></span>)</h2>
+      <div id="detaliu" class="panel" hidden></div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Nr.</th><th>Data</th><th>Client</th><th>Status</th><th class="num">Total</th></tr></thead>
+          <tbody id="randuriComenzi"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="produse" hidden>
+      <h2>Produse</h2>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Produs</th><th>Categorie</th><th class="num">Preț</th><th class="num">Stoc</th></tr></thead>
+          <tbody id="randuriProduse"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="clienti" hidden>
+      <h2>Clienți</h2>
+      <form id="cautare" class="row">
+        <label for="q">Caută după nume de familie</label>
+        <input id="q" type="text" autocomplete="off">
+        <button type="submit" class="button">Caută</button>
+      </form>
+      <p id="eroareCautare" class="error" hidden></p>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Nr.</th><th>Prenume</th><th>Nume</th><th>Email</th><th>Oraș</th></tr></thead>
+          <tbody id="randuriClienti"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="nou" hidden>
+      <h2>Comandă nouă</h2>
+      <form id="formular" class="stack">
+        <label for="client">Client</label>
+        <select id="client"></select>
+        <label for="produs">Produs</label>
+        <select id="produs"></select>
+        <label for="cantitate">Cantitate</label>
+        <input id="cantitate" type="number" min="1" value="1">
+        <button type="submit" class="button">Plasează comanda</button>
+      </form>
+      <p id="mesajComanda" hidden></p>
+    </section>
+  </main>
+
+  <script src="/script.js"></script>
+</body>
+</html>

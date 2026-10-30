@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DemoShop · Consolă SQL</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Consolă SQL</h1>
+      <p class="muted">Baza de date a magazinului DemoShop</p>
+    </div>
+    <button type="button" class="button secondary" id="reset">Resetează baza</button>
+  </header>
+
+  <main class="console">
+    <aside>
+      <h2>Tabele</h2>
+      <div id="schema"></div>
+    </aside>
+    <div class="work">
+      <label for="sql">Interogare</label>
+      <textarea id="sql" rows="8" spellcheck="false" placeholder="SELECT * FROM customers;"></textarea>
+      <div class="row">
+        <button type="button" class="button" id="ruleaza">Rulează</button>
+        <span class="muted">sau ⌘ + Enter</span>
+        <span id="stare" class="muted"></span>
+      </div>
+      <p id="eroare" class="error" hidden></p>
+      <div class="scroll"><table id="rezultat"></table></div>
+    </div>
+  </main>
+
+  <script src="/console.js"></script>
+</body>
+</html>

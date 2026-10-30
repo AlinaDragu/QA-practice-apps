@@ -6,8 +6,10 @@ manual / exploratory QA practice.
 Each app is a folder with separate `index.html`, `styles.css` and `script.js` —
 no build step, no dependencies, no backend. Open `index.html` in a browser and test it.
 
-The one exception is [`api/`](api/): a small REST API (Node.js, no dependencies) for
-API testing with Postman — see [API testing](#api-testing-postman) below.
+There are two exceptions, both small Node.js servers with no dependencies:
+[`api/`](api/), a REST API for API testing with Postman — see
+[API testing](#api-testing-postman) below — and [`sql/`](sql/), an online shop with a
+SQL console — see [Database testing](#database-testing-sql) below.
 
 ## Apps
 
@@ -22,8 +24,9 @@ API testing with Postman — see [API testing](#api-testing-postman) below.
 | Term deposits | [`deposit/index.html`](deposit/index.html) | Term-deposit ("depozit la termen") page ("Meridian Bank"), user logged in, balance 25.000,00 RON, 3 existing deposits, interest/tax preview + early liquidation + a simulated maturity batch | 15 planted |
 | Transactions / statement | [`transactions/index.html`](transactions/index.html) | Account transactions ("Meridian Bank"), user logged in, sold contabil 7.430,00 RON vs. sold disponibil, 14 lines incl. pending pre-authorisations, filters + CSV export + dispute + a monthly-statement batch | 18 planted |
 | Bank API | [`api/README.md`](api/README.md) | REST API ("Meridian Bank"): login with a Bearer token, accounts, transaction history, transfers with an idempotency key, saved beneficiaries (CRUD) — no page, tested with Postman | 17 planted |
+| Online shop database | [`sql/README.md`](sql/README.md) | Shop admin ("DemoShop") plus a SQL console: customers, products, orders, payments — wrong data in the database, and pages that disagree with it | 27 planted |
 
-"Meridian" is a made-up name — not real branding.
+"Meridian" and "DemoShop" are made-up names — not real branding.
 
 Each app has a `BUGS.md` next to it with the full spoiler key: every bug, its
 category, where to find it, and how to reproduce it. The `BUGS.md` files also
@@ -82,6 +85,22 @@ node api/server.js
 [`api/README.md`](api/README.md) is its documentation — the specification you test
 against. The spoiler key is [`api/BUGS.md`](api/BUGS.md), as for the pages. Data lives
 in memory: restarting the server (or `POST /api/reset`) restores the starting state.
+
+## Database testing (SQL)
+
+[`sql/`](sql/) is an online shop with its own SQL console. It uses the SQLite built into
+Node.js, so there's nothing to install. Node 24 or newer is recommended:
+
+```bash
+node sql/server.js
+# → http://localhost:3100          the shop admin
+# → http://localhost:3100/consola  the SQL console
+```
+
+[`sql/README.md`](sql/README.md) has the tables and the rules you test against. The
+spoiler key is [`sql/BUGS.md`](sql/BUGS.md), and `sql/seed.sql` contains the bad rows, so
+leave both for the end. Data lives in memory: restarting the server (or **Resetează
+baza** in the console) restores the starting state.
 
 ## Bug reports
 
