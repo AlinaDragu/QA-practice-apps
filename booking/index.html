@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotel Brezaia — Rezervări</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="card">
+    <div class="brand"><div class="dot"></div><span>Hotel Brezaia</span></div>
+    <h1>Rezervă o cameră</h1>
+    <div class="sub">Rezervare online, plata la recepție.</div>
+    <div class="today" id="today">Azi: joi, 10 decembrie 2026</div>
+
+    <details class="rules" open>
+      <summary>Regulile de rezervare</summary>
+      <ul>
+        <li><strong>Camere:</strong> Standard 300 RON/noapte (max. 2 adulți, max. 3 persoane) ·
+          Deluxe 450 RON/noapte (max. 3 adulți, max. 4 persoane) ·
+          Apartament 700 RON/noapte (max. 4 adulți, max. 6 persoane). Avem un singur apartament.</li>
+        <li><strong>Weekend:</strong> nopțile de vineri și de sâmbătă costă cu 20% mai mult (doar prețul camerei).</li>
+        <li><strong>Mic dejun</strong> (opțional): 40 RON/adult/noapte, 20 RON/copil/noapte.</li>
+        <li><strong>Taxa de stațiune:</strong> 5 RON/adult/noapte. Copiii sunt scutiți.</li>
+        <li><strong>Sejur:</strong> între 1 și 14 nopți. Check-in de azi până la cel mult 365 de zile în avans.</li>
+        <li><strong>Coduri promoționale</strong> (unul per rezervare, nu contează literele mari/mici):
+          <code>IARNA15</code> = −15% din cazare + mic dejun (nu și din taxa de stațiune), minim 2 nopți, check-in până la 28.02.2027 ·
+          <code>FIRST50</code> = −50 RON, o singură dată per adresă de email.</li>
+        <li><strong>Anulare:</strong> gratuită dacă mai sunt cel puțin 2 zile până la check-in.
+          Altfel se reține prețul primei nopți (camera), restul se rambursează.</li>
+        <li><strong>Contact:</strong> nume 2–50 de caractere, email valid, telefon de forma 07xxxxxxxx (10 cifre).</li>
+      </ul>
+    </details>
+
+    <form id="bookForm" novalidate>
+      <div class="row2">
+        <div class="field">
+          <label for="checkIn">Check-in</label>
+          <input type="date" id="checkIn" name="checkIn" value="2026-12-18" min="2026-12-10">
+          <div class="err" id="errCheckIn"></div>
+        </div>
+        <div class="field">
+          <label for="checkOut">Check-out</label>
+          <input type="date" id="checkOut" name="checkOut" value="2026-12-20" min="2026-12-10">
+          <div class="err" id="errCheckOut"></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="roomType">Tip cameră</label>
+        <select id="roomType" name="roomType">
+          <option value="standard">Standard — 300 RON/noapte</option>
+          <option value="deluxe">Deluxe — 450 RON/noapte</option>
+          <option value="apartament">Apartament — 700 RON/noapte</option>
+        </select>
+        <div class="err" id="errRoom"></div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label for="adults">Adulți</label>
+          <select id="adults" name="adults">
+            <option>1</option><option selected>2</option><option>3</option><option>4</option>
+          </select>
+        </div>
+        <div class="field">
+          <span class="pseudo-label">Copii</span>
+          <select id="children" name="children">
+            <option selected>0</option><option>1</option><option>2</option><option>3</option>
+          </select>
+        </div>
+      </div>
+      <div class="err" id="errGuests"></div>
+
+      <label class="check"><input type="checkbox" id="breakfast"> Mic dejun inclus</label>
+
+      <div class="field">
+        <label for="promo">Cod promoțional</label>
+        <div class="promo-row">
+          <input type="text" id="promo" name="promo" autocomplete="off" placeholder="ex. IARNA15">
+          <button type="button" id="promoBtn" class="secondary">Aplică</button>
+        </div>
+        <div class="promo-ok" id="promoOk"></div>
+      </div>
+
+      <div class="summary" id="summary">
+        <div class="pv-row"><span>Nopți</span><span id="sNights">—</span></div>
+        <div class="pv-row"><span>Cazare <span id="sWeekend" class="muted"></span></span><span id="sRoom">—</span></div>
+        <div class="pv-row"><span>Mic dejun</span><span id="sBreakfast">—</span></div>
+        <div class="pv-row"><span>Taxa de stațiune</span><span id="sTax">—</span></div>
+        <div class="pv-row"><span>Reducere</span><span id="sDiscount">—</span></div>
+        <div class="pv-row pv-total"><span>Total de plată</span><span id="sTotal">—</span></div>
+      </div>
+
+      <h2>Date de contact</h2>
+      <div class="field">
+        <label for="name">Nume complet</label>
+        <input type="text" id="name" name="name" autocomplete="off">
+        <div class="err" id="errName"></div>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="text" id="email" name="email" autocomplete="off">
+        <div class="err" id="errEmail"></div>
+      </div>
+      <div class="field">
+        <label for="phone">Telefon</label>
+        <input type="text" id="phone" name="phone" autocomplete="off" placeholder="07xxxxxxxx">
+        <div class="err" id="errPhone"></div>
+      </div>
+
+      <button type="submit" id="bookBtn">Rezervă</button>
+      <div class="msg" id="msg"></div>
+    </form>
+
+    <div class="my-bookings">
+      <div class="mb-head">
+        <h2>Rezervările mele</h2>
+        <span class="refunded">Total rambursat: <strong id="refundTotal">0,00 RON</strong></span>
+      </div>
+      <ul id="bookingList"></ul>
+    </div>
+  </div>
+<script src="script.js"></script>
+</body>
+</html>

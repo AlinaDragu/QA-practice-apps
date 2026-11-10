@@ -23,10 +23,11 @@ SQL console — see [Database testing](#database-testing-sql) below.
 | Bill payment | [`bills/index.html`](bills/index.html) | Bill / utilities payment ("Meridian Bank"), user logged in, balance 4.200,00 RON, 5 outstanding invoices, scheduling + a simulated scheduler | 16 planted |
 | Term deposits | [`deposit/index.html`](deposit/index.html) | Term-deposit ("depozit la termen") page ("Meridian Bank"), user logged in, balance 25.000,00 RON, 3 existing deposits, interest/tax preview + early liquidation + a simulated maturity batch | 15 planted |
 | Transactions / statement | [`transactions/index.html`](transactions/index.html) | Account transactions ("Meridian Bank"), user logged in, sold contabil 7.430,00 RON vs. sold disponibil, 14 lines incl. pending pre-authorisations, filters + CSV export + dispute + a monthly-statement batch | 18 planted |
+| Hotel booking | [`booking/index.html`](booking/index.html) | Room booking ("Hotel Brezaia"): dates, room type and capacity, weekend pricing, breakfast, city tax, promo codes, availability, cancellation with refund. No bug comments in the source — the rules panel on the page is the spec | 19 planted |
 | Bank API | [`api/README.md`](api/README.md) | REST API ("Meridian Bank"): login with a Bearer token, accounts, transaction history, transfers with an idempotency key, saved beneficiaries (CRUD) — no page, tested with Postman | 17 planted |
 | Online shop database | [`sql/README.md`](sql/README.md) | Shop admin ("DemoShop") plus a SQL console: customers, products, orders, payments — wrong data in the database, and pages that disagree with it | 27 planted |
 
-"Meridian" and "DemoShop" are made-up names — not real branding.
+"Meridian", "DemoShop" and "Hotel Brezaia" are made-up names — not real branding.
 
 Each app has a `BUGS.md` next to it with the full spoiler key: every bug, its
 category, where to find it, and how to reproduce it. The `BUGS.md` files also
