@@ -8,7 +8,9 @@ jobs:
     steps:
       - name: Descarc codul
         uses: actions/checkout@v4
-      - name: Versiunea de Node
-        run: node -v
-      - name: Mesaj
-        run: echo "Salut din CI"
+      - name: Instaleaza pachetele
+        run: npm ci
+        working-directory: selenium-tests
+      - name: Ruleaza testele
+        run: npx jest
+        working-directory: selenium-tests
