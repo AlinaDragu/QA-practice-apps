@@ -1,0 +1,14 @@
+name: Teste Selenium
+
+on: push
+
+jobs:
+  teste:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descarc codul
+        uses: actions/checkout@v4
+      - name: Versiunea de Node
+        run: node -v
+      - name: Mesaj
+        run: echo "Salut din CI"
