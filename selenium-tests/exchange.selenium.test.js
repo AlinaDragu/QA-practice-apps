@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require("fs");
 const { pathToFileURL } = require("url");
 const { Builder, By , Select} = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
@@ -10,11 +11,14 @@ const BRAVE = "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser";
 let driver;
 
 beforeAll(async () => {
-  const optiuni = new chrome.Options()
-    .setChromeBinaryPath(BRAVE)
+  const optiuni = new chrome.Options();
+  // Pe Mac folosim Brave; pe GitHub (Ubuntu) Brave nu există, așa că Selenium găsește singur Chrome.
+  if (fs.existsSync(BRAVE)) {
+    optiuni.setChromeBinaryPath(BRAVE);
     // Brave se închide brusc dacă driverul îi trimite setarea --test-type=webdriver,
     // așa că îi spunem driverului să n-o mai trimită.
-    .excludeSwitches("test-type");
+    optiuni.excludeSwitches("test-type");
+  }
   // Brave rulează ascuns, fără fereastră pe ecran.
   // Ca să-l vezi, pune HEADED=1 în fața comenzii: HEADED=1 npx jest exchange
   if (!process.env.HEADED) optiuni.addArguments("--headless=new");
