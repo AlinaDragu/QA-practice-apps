@@ -53,8 +53,8 @@ test("TC1 - schimb valid EUR → RON", async () => {
 
 });
 
-
-test("TC2 - conversia RON->EUR e corecta", async () => {
+// bug 1 – RON → valută înmulțește în loc să împartă
+test.failing("TC2 - conversia RON->EUR e corecta", async () => {
   // preconditii: pagina "schimb valutar" e deschisa (in beforeEach)
 
   // pasi
@@ -68,8 +68,8 @@ test("TC2 - conversia RON->EUR e corecta", async () => {
   expect(schimb).toBeCloseTo(50.28, 2);
 });
 
-
-test("TC3 - butonul ⇅ inversează monedele", async () => {
+// bug nelistat în BUGS.md – ⇅ inversează monedele, dar nu recalculează „Vei primi”
+test.failing("TC3 - butonul ⇅ inversează monedele", async () => {
   // preconditii: pagina "schimb valutar" e deschisa (in beforeEach)
 
   // pasi
@@ -85,7 +85,8 @@ test("TC3 - butonul ⇅ inversează monedele", async () => {
 
 });
 
-test("TC4 - comisionul se percepe", async() => {
+// bug 3 – comisionul de 0,5% e afișat, dar nu se percepe
+test.failing("TC4 - comisionul se percepe", async() => {
   // preconditii: pagina "schimb valutar" e deschisa (in beforeEach)
 
   // pasi
@@ -103,7 +104,8 @@ test("TC4 - comisionul se percepe", async() => {
 
 });
 
-test("TC5 - referinta se afiseaza ca text, nu ca cod", async () => {
+// bug 12 – „Referință” e afișată ca HTML
+test.failing("TC5 - referinta se afiseaza ca text, nu ca cod", async () => {
   // preconditii: pagina "schimb valutar" e deschisa (in beforeEach)
 
   // pasi 
@@ -116,7 +118,8 @@ test("TC5 - referinta se afiseaza ca text, nu ca cod", async () => {
 
 });
 
-test("TC6 - suma primita e aceeasi cu cea afisata inainte", async () => {
+// bug 10 – previzualizarea ≠ valoarea înregistrată (formatare)
+test.failing("TC6 - suma primita e aceeasi cu cea afisata inainte", async () => {
   // preconditii: pagina "schimb valutar" e deschisa (in beforeEach)
 
   // pasi
@@ -135,15 +138,9 @@ test("TC6 - suma primita e aceeasi cu cea afisata inainte", async () => {
 
 });
 
-test.each([
-// [suma, monedaDin, monedaIn, rezAsteptat]
-["100","EUR", "RON", 497.18],
-["100","USD", "RON", 458.34],
-["100","RON", "EUR", 20.11],
-["100","RON", "USD", 21.82],
-["100","EUR", "USD", 108.47]
-
-]) ("TC7 - conversia e corecta pentru mai multe perechi de monede %s / %s / %s / %s", async (suma,monedaDin,monedaIn,rezAsteptat) => {
+// Corpul lui TC7 e o funcție, ca să-l folosească ambele blocuri de mai jos
+// (în login TC9 corpul e copiat de două ori; ambele variante merg).
+async function verificaConversia(suma, monedaDin, monedaIn, rezAsteptat) {
   // preconditii: pagina "schimb valutar" e deschisa (in beforeEach)
 
   // pasi
@@ -158,10 +155,25 @@ test.each([
   const primit = await driver.findElement(By.id("receiveOut")).getText();
   const primi = parseFloat(primit);
   expect(primi).toBeCloseTo(rezAsteptat, 2);
+}
 
-});
+test.each([
+// [suma, monedaDin, monedaIn, rezAsteptat]
+["100","EUR", "RON", 497.18],
+["100","USD", "RON", 458.34]
+])("TC7 - conversia e corecta pentru mai multe perechi de monede %s / %s / %s / %s", verificaConversia);
 
-test("TC8 - suma negativa e respinsa si soldul nu se schimba", async () => {
+// bug 1 (RON → EUR, RON → USD) – RON → valută înmulțește în loc să împartă
+// bug 2 (EUR → USD) – orice pereche fără RON dă NaN
+test.failing.each([
+// [suma, monedaDin, monedaIn, rezAsteptat]
+["100","RON", "EUR", 20.11],
+["100","RON", "USD", 21.82],
+["100","EUR", "USD", 108.47]
+])("TC7 - conversia e corecta pentru mai multe perechi de monede %s / %s / %s / %s", verificaConversia);
+
+// bug 6 – sumele zero și negative sunt acceptate
+test.failing("TC8 - suma negativa e respinsa si soldul nu se schimba", async () => {
   // preconditii: pagina "schimb valutar" e deschisa (in beforeEach)
 
   //pasi
@@ -177,7 +189,8 @@ test("TC8 - suma negativa e respinsa si soldul nu se schimba", async () => {
   expect(await mesaj.getAttribute("class")).toContain("error");
 });
 
-test.each([
+// bug 13 – listele de monede nu au etichetă (label)
+test.failing.each([
 // [idLista]
 ["fromCur"],
 ["toCur"]

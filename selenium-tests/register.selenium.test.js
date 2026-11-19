@@ -73,7 +73,8 @@ test("TC1 - creare cont cu date valide", async () => {
 
 });
 
-test("TC2 - bifa de marketing nu e bifată de la început", async () => {
+// bug 12 – bifa de marketing e bifată de la început
+test.failing("TC2 - bifa de marketing nu e bifată de la început", async () => {
   //preconditii: pagina "Deschide cont curent" e deschisa (in beforeEach)
 
   //pasi
@@ -82,8 +83,8 @@ test("TC2 - bifa de marketing nu e bifată de la început", async () => {
   expect(await driver.findElement(By.id("promo")).isSelected()).toBe(false);
 });
 
-
-test("TC3 - parole diferite", async () => {
+// bug 5 – confirmarea parolei compară doar lungimea
+test.failing("TC3 - parole diferite", async () => {
   //preconditii: pagina "Deschide cont curent" e deschisa (in beforeEach)
 
   //pasi
@@ -111,8 +112,8 @@ test("TC4 - telefonul se formatează automat", async () => {
   expect(await phone.getAttribute("value")).toBe("0722 123 456");
 });
 
-
-test("TC5 - telefon cu o cifră în plus", async () => {
+// bug 13 – formatarea telefonului taie în tăcere cifrele în plus
+test.failing("TC5 - telefon cu o cifră în plus", async () => {
   //preconditii: pagina "Deschide cont curent" e deschisa (in beforeEach)
 
   //pasi 
@@ -123,8 +124,8 @@ test("TC5 - telefon cu o cifră în plus", async () => {
   expect(await phonep.getAttribute("value")).toBe("07221234567");
 });
 
-
-test("TC6 - email fara format valid", async () => {
+// bug 1 – emailul nu e validat
+test.failing("TC6 - email fara format valid", async () => {
   //preconditii: pagina "deschide cont curent" e deschisa (in beforeEach)
 
   //pasi 
@@ -140,8 +141,8 @@ test("TC6 - email fara format valid", async () => {
 
 });
 
-
-test("TC7 - contul se creeaza o singura data", async () => {
+// bug 11 – dublu-submit neprevenit
+test.failing("TC7 - contul se creeaza o singura data", async () => {
   //preconditii: pagina "deschide cont curent" e deschisa (in beforeEach)
 
   //pasi 
@@ -157,8 +158,8 @@ test("TC7 - contul se creeaza o singura data", async () => {
   expect(await mesaj.getText()).toBe("Cont creat pentru ana.pop@exemplu.ro.");
 });
 
-
-test("TC8 - ordinea Tab", async () => {
+// bug 8 – ordinea Tab e greșită
+test.failing("TC8 - ordinea Tab", async () => {
   //preconditii: pagina "deschide cont curent" e deschisa (in beforeEach)
 
   //pasi

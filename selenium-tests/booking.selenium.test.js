@@ -33,8 +33,8 @@ beforeEach(async () => {
   await driver.get(BOOKING_URL);
 });
 
-
-test("TC1 - pretul camerei pentru un weekend (vineri + sambata)", async () => {
+// bug 2 – suprataxa de weekend pusă pe sâmbătă + duminică, nu vineri + sâmbătă
+test.failing("TC1 - pretul camerei pentru un weekend (vineri + sambata)", async () => {
     // preconditii: pagina e deschisa cu valorile implicite : Standard, 
     // 2 adulți, check-in 18.12.2026 (vineri), check-out 20.12.2026.
 
@@ -43,10 +43,8 @@ test("TC1 - pretul camerei pentru un weekend (vineri + sambata)", async () => {
     expect(pret).toBe("720,00 RON");
 });
 
-
-
-
-test("TC2 - dublu click pe Rezerva creeaza o singura rezervare", async () => {
+// bug 17 – „Rezervă” nu se dezactivează, dublu-click = două rezervări
+test.failing("TC2 - dublu click pe Rezerva creeaza o singura rezervare", async () => {
     // preconditii: pagina e deschisa cu valorile implicite : Standard, 
     // 2 adulți, check-in 18.12.2026 (vineri), check-out 20.12.2026.
 
@@ -65,8 +63,8 @@ test("TC2 - dublu click pe Rezerva creeaza o singura rezervare", async () => {
     expect(rezervari.length).toBe(4);
 });
 
-
-test("TC3 - anularea la exact 2 zile", async () => {
+// bug 10 – anularea cu exact 2 zile înainte păstrează prima noapte
+test.failing("TC3 - anularea la exact 2 zile", async () => {
   // preconditii: pagina e deschisa : "azi" e joi 10.12.2026 si 
   // rezervare RZ-1002 (Standard, 12.12–14.12.2026, total 680,00 RON) are check-in-ul peste exact 2 zile
 

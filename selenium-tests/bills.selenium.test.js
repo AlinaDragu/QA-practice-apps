@@ -94,7 +94,8 @@ test("TC3 - totalul de plata = factura + penalitatea (Vodafone)", async () => {
 
 });
 
-test("TC4 - penalitatea din totalul de plata se incaseaza efectiv (Engie)", async () => {
+// bug 1 – penalitatea apare în total, dar nu se încasează
+test.failing("TC4 - penalitatea din totalul de plata se incaseaza efectiv (Engie)", async () => {
   // preconditii: pagina "plata facturi" e deschisa (in beforeEach)
 
   // pasi
@@ -107,7 +108,8 @@ test("TC4 - penalitatea din totalul de plata se incaseaza efectiv (Engie)", asyn
   expect(totalPlataDupa).toContain(totalPlataInainte);
 });
 
-test("TC5 - antetul „Total de plata (N facturi)” se actualizeaza dupa o plata", async () => {
+// bug 2 – antetul „Total de plată (N facturi)” nu se recalculează
+test.failing("TC5 - antetul „Total de plata (N facturi)” se actualizeaza dupa o plata", async () => {
   // preconditii: pagina "plata facturi" e deschisa (in beforeEach)
 
   // pasi
@@ -121,7 +123,8 @@ test("TC5 - antetul „Total de plata (N facturi)” se actualizeaza dupa o plat
   expect(antet).toBe(lista.length);
 });
 
-test("TC6 - factura Enel ramane in lista dupa o plata partiala", async () => {
+// bug 3 – o plată parțială șterge toată factura
+test.failing("TC6 - factura Enel ramane in lista dupa o plata partiala", async () => {
   // preconditii: pagina "plata facturi" e deschisa (in beforeEach)
 
   // pasi
@@ -136,7 +139,8 @@ test("TC6 - factura Enel ramane in lista dupa o plata partiala", async () => {
 
 });
 
-test("TC7 - factura cu scadenta azi nu e restanta (Digi)", async () => {
+// bug 10 – „restantă” greșit cu o zi la limita zilei
+test.failing("TC7 - factura cu scadenta azi nu e restanta (Digi)", async () => {
   // preconditii: pagina "plata facturi" e deschisa (in beforeEach)
 
   // pasi
@@ -148,7 +152,8 @@ test("TC7 - factura cu scadenta azi nu e restanta (Digi)", async () => {
 
 });
 
-test("TC8 - plata programata se executa o singura data (Enel)", async () => {
+// bug 12 – „Rulează plățile programate” nu e idempotent
+test.failing("TC8 - plata programata se executa o singura data (Enel)", async () => {
   // preconditii: pagina "plata facturi" e deschisa (in beforeEach)
 
   // pasi
@@ -164,8 +169,8 @@ test("TC8 - plata programata se executa o singura data (Enel)", async () => {
   expect(listaP.length).toBe(1);
 });
 
-
-test("TC9 - cardul apare mascat in panoul de plata", async () => {
+// bug 14 – numărul complet al cardului apare în clar
+test.failing("TC9 - cardul apare mascat in panoul de plata", async () => {
   // preconditii: pagina "plata facturi" e deschisa (in befoareEach)
 
   // pasi

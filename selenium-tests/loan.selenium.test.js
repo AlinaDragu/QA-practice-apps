@@ -53,7 +53,8 @@ test("TC1 - simulare cu date valide", async () => {
 
 });
 
-test("TC2 - rata lunara e calculata corect", async () => {
+// bug 1 – rata lunară de ~3 ori prea mare (dobânda anuală folosită ca lunară)
+test.failing("TC2 - rata lunara e calculata corect", async () => {
   //preconditii: pagina "simulare credit" e deschisa (in beforeEach)
 
   //pasi
@@ -68,8 +69,8 @@ test("TC2 - rata lunara e calculata corect", async () => {
 
 });
 
-
-test("TC3 - asigurarea de viata se adauga la rata lunara", async () => {
+// bug 9 – bifa „Asigurare de viață” nu schimbă rata
+test.failing("TC3 - asigurarea de viata se adauga la rata lunara", async () => {
   //preconditii: pagina "simulare credit" e deschisa (in beforeEach)
   
   //pasi 
@@ -87,7 +88,8 @@ test("TC3 - asigurarea de viata se adauga la rata lunara", async () => {
   
 });
 
-test("TC4 - totalul de plata e egal cu rata lunara x numarul de luni", async () => {
+// bug 7 – „Total de plată” ≠ rata lunară × perioada
+test.failing("TC4 - totalul de plata e egal cu rata lunara x numarul de luni", async () => {
   //preconditii: pagina "simulare credit" e deschisa (in beforeEach)
 
   //pasi
@@ -103,8 +105,8 @@ test("TC4 - totalul de plata e egal cu rata lunara x numarul de luni", async () 
 
 });
 
-
-test("TC5 - sumele sunt afisate in format romanesc", async () => {
+// bug 8 – formatare inconsecventă a sumelor
+test.failing("TC5 - sumele sunt afisate in format romanesc", async () => {
   //preconditii: pagina "simulare credit" e deschisa (in beforeEach)
 
   //pasi
@@ -116,14 +118,8 @@ test("TC5 - sumele sunt afisate in format romanesc", async () => {
   expect(await driver.findElement(By.id("comOut")).getText()).toBe("200,00 RON");
 });
 
-test.each([
-  // [suma, clasaAsteptata]
-  ["999", "error"],   
-  ["1000", "success"], 
-  ["150000", "success"],  
-  ["150001", "error"],
-  ["-5000", "error"]    
-]) ("TC6 - suma creditului e acceptata doar intre 1.000 si 150.000 RON %s / %s", async (suma, clasaAsteptata) => {
+// Corpul lui TC6 e o funcție, ca să-l folosească ambele blocuri de mai jos.
+async function verificaSuma(suma, clasaAsteptata) {
   //preconditii: pagina "simulare credit" e deschisa (in beforeEach)
 
   //pasi 
@@ -135,8 +131,21 @@ test.each([
   //rezultat asteptat 
   const mesajj = await driver.findElement(By.id("message"));
   expect(await mesajj.getAttribute("class")).toContain(clasaAsteptata);
+}
 
-});
+test.each([
+  // [suma, clasaAsteptata]
+  ["1000", "success"],
+  ["150000", "success"]
+])("TC6 - suma creditului e acceptata doar intre 1.000 si 150.000 RON %s / %s", verificaSuma);
+
+// bug 3 – suma nu are verificare de minim / maxim / semn
+test.failing.each([
+  // [suma, clasaAsteptata]
+  ["999", "error"],
+  ["150001", "error"],
+  ["-5000", "error"]
+])("TC6 - suma creditului e acceptata doar intre 1.000 si 150.000 RON %s / %s", verificaSuma);
 
 test("TC7 - sliderul actualizeaza campul", async () => {
   //preconditii: pagina "simulare credit" e deschisa (in beforeEach)
@@ -150,7 +159,8 @@ test("TC7 - sliderul actualizeaza campul", async () => {
 
 });
 
-test("TC8 - campul actualizeaza sliderul", async () => {
+// bug 2 – sincronizarea câmp ↔ slider merge doar într-un sens
+test.failing("TC8 - campul actualizeaza sliderul", async () => {
   //preconditii: pagina "simulare credit" e deschisa (in beforeEach)
 
   //pasi
@@ -162,8 +172,8 @@ test("TC8 - campul actualizeaza sliderul", async () => {
   expect(await sume.getAttribute("value")).toBe("100000");
 });
 
-
-test("TC9 - rezultatele vechi raman pe ecran", async () => {
+// bug 13 – rezultatul vechi nu se șterge și nu e marcat
+test.failing("TC9 - rezultatele vechi raman pe ecran", async () => {
   //preconditii: pagina "simulare credit" e deschisa (in beforeEach)
 
   //pasi 

@@ -56,8 +56,8 @@ test("TC1 - autentificare valida", async () => {
 
 });
 
-
-test("TC2 - autentificare fara email introdus", async () => {
+// bug1 - mesajele de camp gol sunt inversate
+test.failing("TC2 - autentificare fara email introdus", async () => {
   // Precondiții: pagina de login e deschisă (în beforeEach)
 
   await driver.findElement(By.id("passwordField")).sendKeys("Parola123");
@@ -69,8 +69,8 @@ test("TC2 - autentificare fara email introdus", async () => {
   expect(await mesaj.getAttribute("class")).toContain("error");
 });
 
-
-test("TC3 - autentificare cu parola gresita", async () => {
+// bug2 - parola gresita scrisa ca si "Cont inexistent"
+test.failing("TC3 - autentificare cu parola gresita", async () => {
   // Precondiții: pagina de login e deschisă (în beforeEach)
 
   // Pasi
@@ -85,8 +85,8 @@ test("TC3 - autentificare cu parola gresita", async () => {
 
 });
 
-
-test("TC4 - Link-ul „Ai uitat parola?” duce la pagina de resetare a parolei", async () => {
+// bug3 - "Ai uitat parola" - linkul e mort
+test.failing("TC4 - Link-ul „Ai uitat parola?” duce la pagina de resetare a parolei", async () => {
   //preconditii: pagina de login e deschisa (in beforeEach)
 
   //  pasi
@@ -97,8 +97,8 @@ test("TC4 - Link-ul „Ai uitat parola?” duce la pagina de resetare a parolei"
   expect(url).not.toBe(LOGIN_URL);
 });
 
-
-test("TC5 - Butonul „Autentificare” se dezactivează în timpul verificării", async () => {
+// bug6 - submit dublu neprevenit
+test.failing("TC5 - Butonul „Autentificare” se dezactivează în timpul verificării", async () => {
   // preconditii: pagina de login e deschisa (in beforeEach)
 
   //pasi
@@ -115,8 +115,8 @@ test("TC5 - Butonul „Autentificare” se dezactivează în timpul verificării
 
 });
 
-
-test("TC6 - Autentificarea e refuzată când emailul conține caractere de SQL injection", async () => {
+// bug4 - Ocolirea autentificării prin intermediul unor date de intrare de tip injecție SQL
+test.failing("TC6 - Autentificarea e refuzată când emailul conține caractere de SQL injection", async () => {
   //preconditii: pagina de login e deschisa (in beforeEach)
 
   //pasi 
@@ -131,7 +131,8 @@ test("TC6 - Autentificarea e refuzată când emailul conține caractere de SQL i
 
 });
 
-test("TC7 - Tasta Tab mută cursorul din câmpul de email în câmpul de parolă", async () => {
+// bug5 - Ordinea de navigare cu tastatura este defectuoasă
+test.failing("TC7 - Tasta Tab mută cursorul din câmpul de email în câmpul de parolă", async () => {
   //perconditii: pagina de login e deshisa (in beforeEach)
   
   //pasi 
@@ -145,7 +146,8 @@ test("TC7 - Tasta Tab mută cursorul din câmpul de email în câmpul de parolă
 
 });
 
-test("TC8 - Click pe eticheta „Adresă de email” mută cursorul în câmpul de email", async () => {
+// bug9 - Labels not associated with inputs
+test.failing("TC8 - Click pe eticheta „Adresă de email” mută cursorul în câmpul de email", async () => {
   //preconditii: pagina de login e deschisa (in beforeEach)
 
   //pasi 
@@ -156,10 +158,29 @@ test("TC8 - Click pe eticheta „Adresă de email” mută cursorul în câmpul 
   expect(await act.getAttribute("id")).toBe("emailField");   
 });
 
+
 test.each([
   // [email, parola, mesajAsteptat]
-  ["", "Parola123", "Adresa de email este obligatorie."],   
-  ["alt@meridian.ro", "Parola123", "Cont inexistent."], 
+  ["alt@meridian.ro", "Parola123", "Cont inexistent."]   
+
+])("TC9 - login invalid cu %s / %s", async (email, parola, mesajAsteptat) => {
+  //preconditii: pagina de login este deschisa (in beforeEach)
+  // pași
+  await login(email,parola);
+
+  // rezultat așteptat
+  const mesajj = await driver.findElement(By.id("message"));
+  await driver.wait(until.elementIsVisible(mesajj), 5000);
+  expect(await mesajj.getText()).toBe(mesajAsteptat);
+  expect(await mesajj.getAttribute("class")).toContain("error");
+
+});
+
+
+// bug 1, bug 2, bug 4 – mesaje inversate / parolă greșită ca „Cont inexistent” / SQL injection
+test.failing.each([
+  // [email, parola, mesajAsteptat]
+  ["", "Parola123", "Adresa de email este obligatorie."],    
   ["client@meridian.ro", "Parola999", "Parola introdusă este greșită."],  
   ["client@meridian.ro'--", "abc123", "Cont inexistent."],    
 

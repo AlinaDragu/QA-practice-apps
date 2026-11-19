@@ -49,7 +49,8 @@ test("TC1 - transfer valid în RON", async () => {
   expect(await mesaj.getText()).toBe("Plată confirmată către RO49AAAA1B31007593840000.");
 });
 
-test("TC2 - suma peste sold", async () => {
+// bug 6 – la fonduri insuficiente apare „IBAN invalid.”
+test.failing("TC2 - suma peste sold", async () => {
   // Precondiții: pagina de plată e deschisă (in beforeEach)
 
   // Pași
@@ -86,7 +87,8 @@ test("TC3 - plata apare in istoric", async () => {
 
 // ===== Setul 2 de exerciții (2026-10-05) =====
 
-test("TC4 - campul PIN ascunde cifrele introduse", async () => {
+// bug 10 – câmpul PIN nu e mascat
+test.failing("TC4 - campul PIN ascunde cifrele introduse", async () => {
   // Precondiții pagina e deschisă (în beforeEach)
 
 
@@ -133,7 +135,8 @@ test("TC6 - previzualizarea arata suma in EUR inainte de plata", async () => {
 
 });
 
-test("TC7 - previzualizarea se actualizeaza cand schimbi moneda dupa ce ai scris suma", async () => {
+// bug 11 – previzualizarea nu se recalculează la schimbarea monedei
+test.failing("TC7 - previzualizarea se actualizeaza cand schimbi moneda dupa ce ai scris suma", async () => {
   // Precondiții pagina e deschisă (în beforeEach)
 
   // Pași
@@ -147,7 +150,8 @@ test("TC7 - previzualizarea se actualizeaza cand schimbi moneda dupa ce ai scris
 
 });
 
-test("TC8 - plata nu se dubleaza la dublu-click pe 'Confirma plata'", async () => {
+// bug 4 – dublu-submit neprevenit
+test.failing("TC8 - plata nu se dubleaza la dublu-click pe 'Confirma plata'", async () => {
   // Precondiții pagina e deschisă (în beforeEach)
 
   // Pași
