@@ -39,7 +39,7 @@ async function login(email, parola) {
   // cei 3 pași, cu email și parola în loc de texte fixe
   await driver.findElement(By.id("emailField")).sendKeys(email);
   await driver.findElement(By.id("passwordField")).sendKeys(parola);
-  await driver.findElement(By.id("submitBtn")).click();
+  await driver.findElement(By.id("loginBtn")).click();
 
 };
 
@@ -61,7 +61,7 @@ test.failing("TC2 - autentificare fara email introdus", async () => {
   // Precondiții: pagina de login e deschisă (în beforeEach)
 
   await driver.findElement(By.id("passwordField")).sendKeys("Parola123");
-  await driver.findElement(By.id("submitBtn")).click();
+  await driver.findElement(By.id("loginBtn")).click();
 
   const mesaj = await driver.findElement(By.id("message"));
   await driver.wait(until.elementIsVisible(mesaj), 5000);
@@ -104,7 +104,7 @@ test.failing("TC5 - Butonul „Autentificare” se dezactivează în timpul veri
   //pasi
   await driver.findElement(By.id("emailField")).sendKeys("client@meridian.ro");
   await driver.findElement(By.id("passwordField")).sendKeys("Parola123");
-  const buton = await driver.findElement(By.id("submitBtn"));   
+  const buton = await driver.findElement(By.id("loginBtn"));   
   await buton.click();                                           
 
   //rezultat asteptat

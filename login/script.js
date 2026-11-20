@@ -5,7 +5,7 @@ var form = document.getElementById("loginForm");
 var emailEl = document.getElementById("emailField");
 var passEl = document.getElementById("passwordField");
 var msg = document.getElementById("message");
-var submitBtn = document.getElementById("submitBtn");
+var submitBtn = document.getElementById("loginBtn");
 
 // BUG 3: link handler does nothing useful
 document.getElementById("forgotLink").addEventListener("click", function (e) {
