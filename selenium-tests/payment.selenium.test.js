@@ -46,7 +46,7 @@ test("TC1 - transfer valid în RON", async () => {
   // Rezultat așteptat
   const mesaj = await driver.findElement(By.id("message"));
   await driver.wait(until.elementIsVisible(mesaj), 5000);
-  expect(await mesaj.getText()).toBe("Plata confirmata catre RO49AAAA1B31007593840000.");
+  expect(await mesaj.getText()).toBe("Plată confirmată către RO49AAAA1B31007593840000.");
 });
 
 // bug 6 – la fonduri insuficiente apare „IBAN invalid.”
