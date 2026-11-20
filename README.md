@@ -1,5 +1,7 @@
 # qa-practice-apps
 
+![Teste Selenium](https://github.com/AlinaDragu/QA-practice-apps/actions/workflows/ci.yml/badge.svg)
+
 Small, self-contained web pages built **with intentional bugs**, used as targets for
 manual / exploratory QA practice.
 
