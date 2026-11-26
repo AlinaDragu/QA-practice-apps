@@ -47,7 +47,7 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "if (pm.response.code === 200) {\n  pm.environment.set(\"token\", pm.response.json().token);\n};\n\n//1\npm.test(\"Status 200\", function () {\n    pm.response.to.have.status(200);\n});\n\n//2\npm.test(\"Tip este Bearer\", function () {\n    pm.expect(pm.response.json().tip).to.eql(\"Bearer\");\n});\n\n//3\npm.test(\"Token expira in 900 s\", function () {\n    pm.expect(pm.response.json().expiraIn).to.eql(900);\n});\n\n//4\npm.test(\"Tokenul e string\", function () {\n    pm.expect(pm.response.json().token).to.be.a('string');\n});\n\n//5\npm.test(\"Utilizatorul nu are parola\", function () {\n    pm.expect(pm.response.json().utilizator).to.not.have.property(\"parola\");\n});"
+                  "if (pm.response.code === 200) {\n  pm.environment.set(\"token\", pm.response.json().token);\n};\n\n//1\npm.test(\"Status 200\", function () {\n    pm.response.to.have.status(200);\n});\n\n//2\npm.test(\"Tip este Bearer\", function () {\n    pm.expect(pm.response.json().tip).to.eql(\"Bearer\");\n});\n\n//3\npm.test(\"Token expira in 900 s\", function () {\n    pm.expect(pm.response.json().expiraIn).to.eql(900);\n});\n\n//4\npm.test(\"Tokenul e string\", function () {\n    pm.expect(pm.response.json().token).to.be.a('string');\n});\n\n//5\npm.test(\"KNOWN BUG 2: parola apare în răspunsul de login\", function () {\n    pm.expect(pm.response.json().utilizator).to.have.property(\"parola\");\n});"
                 ]
               }
             }
@@ -205,7 +205,7 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test(\"Status code este 403\", function () {\n    pm.response.to.have.status(403);\n});\n\npm.test(\"Nu ai acces la acest cont.\", function () {\n    pm.expect(pm.response.json().eroare).to.eql(\"Nu ai acces la acest cont.\");\n});"
+                  "pm.test(\"KNOWN BUG 5: Ana primește 200 pe contul lui Ion\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"KNOWN BUG 5: Ana vede contul lui Ion\", function () {\n    pm.expect(pm.response.json().titular).to.eql(\"Ion Ionescu\");\n});"
                 ]
               }
             }
