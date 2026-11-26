@@ -1,0 +1,417 @@
+{
+  "info": {
+    "_postman_id": "c7b07863-20ef-458b-b71a-e7c283a14df6",
+    "name": "Meridian regression",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "59213210",
+    "_collection_link": "https://go.postman.co/collection/59213210-c7b07863-20ef-458b-b71a-e7c283a14df6?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "1 Setup",
+      "item": [
+        {
+          "name": "{{baseUrl}}/api/reset",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.environment.unset(\"token\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reset",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reset"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {\n  pm.environment.set(\"token\", pm.response.json().token);\n};\n\n//1\npm.test(\"Status 200\", function () {\n    pm.response.to.have.status(200);\n});\n\n//2\npm.test(\"Tip este Bearer\", function () {\n    pm.expect(pm.response.json().tip).to.eql(\"Bearer\");\n});\n\n//3\npm.test(\"Token expira in 900 s\", function () {\n    pm.expect(pm.response.json().expiraIn).to.eql(900);\n});\n\n//4\npm.test(\"Tokenul e string\", function () {\n    pm.expect(pm.response.json().token).to.be.a('string');\n});\n\n//5\npm.test(\"Utilizatorul nu are parola\", function () {\n    pm.expect(pm.response.json().utilizator).to.not.have.property(\"parola\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"email\": \"client@meridian.ro\", \"parola\": \"Parola123\" }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2 Health",
+      "item": [
+        {
+          "name": "{{baseUrl}}/api/health",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Stare este ok\", function () {\n    pm.expect(pm.response.json().stare).to.eql(\"ok\");\n});\n\npm.test(\"Răspuns sub 500 ms\", function () {\n    pm.expect(pm.response.responseTime).to.be.below(500);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3 Conturi",
+      "item": [
+        {
+          "name": "http://localhost:3000/api/conturi",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const schema = {\n  type: \"object\",\n  required: [\"conturi\"],\n  properties: {\n    conturi: {\n      type: \"array\",\n      items: {\n        type: \"object\",\n        required: [\"id\", \"tip\", \"iban\", \"valuta\", \"sold\", \"titular\"],\n        additionalProperties: false,\n        properties: {\n          id: { type: \"integer\" },\n          tip: { type: \"string\", enum: [\"curent\", \"economii\"] },\n          iban: { type: \"string\" },\n          valuta: { type: \"string\" },\n          sold: { type: \"number\" },\n          titular: { type: \"string\" }\n        }\n      }\n    }\n  }\n};\n\npm.test(\"Schema conturi conform doc\", function () {\n  pm.response.to.have.jsonSchema(schema);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/conturi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "conturi"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/api/conturi - No Auth",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code este 401\", function () {\n    pm.response.to.have.status(401);\n});\n\npm.test(\"Body are câmpul eroare\", function () {\n    pm.expect(pm.response.json()).to.have.property(\"eroare\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/conturi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "conturi"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/api/conturi/201",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code este 403\", function () {\n    pm.response.to.have.status(403);\n});\n\npm.test(\"Nu ai acces la acest cont.\", function () {\n    pm.expect(pm.response.json().eroare).to.eql(\"Nu ai acces la acest cont.\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/conturi/201",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "conturi",
+                "201"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/api/conturi/999",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {\n    pm.response.to.have.status(404);\n});\n\npm.test(\"Cont inexistent.\", function() {\n    pm.expect(pm.response.json().eroare).to.eql(\"Cont inexistent.\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/conturi/999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "conturi",
+                "999"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4 Transferuri",
+      "item": [
+        {
+          "name": "http://localhost:3000/api/transferuri",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {\n  pm.environment.set(\"transferId\", pm.response.json().id);\n};\n\npm.test(\"Status este 201\", function () {\n    pm.response.to.have.status(201);\n});\n\npm.test(\"Stare este efectuat\", function () {\n    pm.expect(pm.response.json().stare).to.eql(\"efectuat\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "transfer-001"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contSursa\": 101,\n  \"ibanDestinatie\": \"RO66BACX0000001234567890\",\n  \"suma\": 100,\n  \"descriere\": \"Test idempotenta\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/transferuri",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "transferuri"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/api/transferuri/{{transferId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Suma este 100\", function () {\n    pm.expect(pm.response.json().suma).to.equal(100);\n});\n\npm.test(\"Este transferul salvat\", function () {\n  pm.expect(pm.response.json().id).to.eql(pm.environment.get(\"transferId\"));\n});\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/transferuri/{{transferId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "transferuri",
+                "{{transferId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "const expira = pm.environment.get(\"tokenExpira\");",
+          "if(!pm.environment.get(\"token\") || !expira || Date.now() > Number(expira)) {",
+          "    pm.sendRequest({",
+          "        url: pm.environment.get(\"baseUrl\") + \"/api/login\",",
+          "        method: \"POST\",",
+          "        header: { \"Content-Type\": \"application/json\" },",
+          "        body: {",
+          "            mode: \"raw\", raw: JSON.stringify({",
+          "                email: \"client@meridian.ro\", parola: \"Parola123\"",
+          "            })",
+          "        }",
+          "    }, function (err,res){",
+          "        pm.environment.set(\"token\", res.json().token);",
+          "        pm.environment.set(\"tokenExpira\", Date.now() + (res.json().expiraIn - 60) * 1000 );",
+          "    });",
+          "}"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ]
+}
